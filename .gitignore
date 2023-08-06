@@ -1,0 +1,10 @@
+.idea/
+__pycache__/
+bot.db
+*.txt
+!requirements.txt
+*.sql
+文档.md
+inlinekeyboard2.py
+config.py
+mymodel.py
