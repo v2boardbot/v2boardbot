@@ -9,7 +9,7 @@ from telegram.ext import (
     ConversationHandler,
 )
 
-from MenuHandle import menu_checkin, menu_sub, menu_traffic, menu_node, menu_wallet, menu_lucky
+from MenuHandle import *
 from MyCommandHandler import *
 from keyboard import start_keyboard
 from v2board import _bind, _checkin, _traffic, _lucky
@@ -88,6 +88,7 @@ if __name__ == '__main__':
                 CallbackQueryHandler(menu_wallet, pattern="^wallet"),
                 CallbackQueryHandler(menu_checkin, pattern="^checkin$"),
                 CallbackQueryHandler(menu_sub, pattern="^sub$"),
+                CallbackQueryHandler(menu_mysub, pattern="^mysub"),
                 CallbackQueryHandler(menu_traffic, pattern="^traffic$"),
                 CallbackQueryHandler(menu_lucky, pattern="^lucky"),
                 CallbackQueryHandler(menu_node, pattern="^node"),

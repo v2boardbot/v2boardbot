@@ -13,5 +13,9 @@ start_keyboard = [
         InlineKeyboardButton(text='✍️签到', callback_data='checkin'),
         InlineKeyboardButton(text='☋节点状态', callback_data='node'),
     ],
+    [
+        InlineKeyboardButton(text='订阅链接', callback_data='mysub'),
+        InlineKeyboardButton(text='等待添加', callback_data='***'),
+    ],
 ]
 return_keyboard = [InlineKeyboardButton('返回菜单', callback_data='start_over')]

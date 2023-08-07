@@ -54,29 +54,38 @@ urllib3==2.0.4
 
 ## 使用
 
+### 声明: 由于还在测试阶段,数据库字段经常变化,可能随时删除重建
+
 请自行 [@BotFather](https://t.me/BotFather) 创建机器人，命令菜单如下
 
 ```text
 start - 展开管理面板
 bind - 绑定账号(仅限私聊)
+unbind - 解除绑定
 checkin - 每日签到
 lucky - 幸运抽奖
 wallet - 查看钱包
 traffic - 查看流量
 ```
 
-新建config.py或者将config.example.py重命名为config.py，按照示例填写自己的配置文件
+按照示例填写自己的配置文件并保存为config.py,下面个人信息已脱敏处理
 
 ```python
 START_ROUTES, END_ROUTES = 0, 1
 
-DATABASE = {'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True, 'host': 'mysql服务器地址', 'port': 3306,
-            'user': 'mysql数据库用户名', 'password': 'mysql数据库密码'}
+DATABASE = {'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True, 'host': '172.16.1.15', 'port': 3306,
+            'user': 'v2board', 'password': 'v2board'}
 
-TOKEN = 'Telegram机器人token令牌'  # 类似：6*85**1*17:A*********************************Y
+TOKEN = '6*85*818*7**A*PD*LNk*x*Q**nS*a**8KBPCdE*a***rY'
+
+URL = 'http://172.16.1.15'  # 网站地址
+SUFFIX = '**17*4b7'  # 网站管理员后缀 访问 http(s)://你的站点/b617f4b7 进入管理面板，你可以在用户中心修改你的密码。
+EMAIL = "admin@qq.com"  # 网站管理员邮箱
+PASSWORD = "***5***7fcb6*d9*b**62a5c**eeb3e1"  # 网站管理员密码
 
 HTTP_PROXY = 'http://127.0.0.1:1082'  # 如果需要代理，则填写http代理地址，不需要代理填写None
 HTTPS_PROXY = 'http://127.0.0.1:1082'  # 同上
+
 ```
 
 先运行init_db.py来初始化机器人使用的数据库，本地sqlite数据库，不需要任何配置
@@ -97,11 +106,11 @@ python Bot.py
 
 ## 运行截图
 
-![image-20230806170548614](images/image-20230806170548614.png)
+![image-20230807100112112](images/image-20230807100112112.png)
 
-![image-20230806171037159](images/image-20230806171037159.png)
+![image-20230807100240470](images/image-20230807100240470.png)
 
-
+![image-20230807175208154](images/image-20230807175208154.png)
 
 ## TODO
 
@@ -110,7 +119,7 @@ python Bot.py
 - [x] 我的钱包
 - [x] 流量查询
 - [x] 幸运抽奖
-- [ ] 订阅链接
+- [x] 订阅链接
 - [x] 我的订阅
 - [x] 签到
 - [x] 节点状态
@@ -123,10 +132,15 @@ python Bot.py
 - [x] 幸运抽奖
 - [x] 查看钱包
 - [x] 查看流量
+- [x] 节点状态
 
 
 
 ## 更新记录
+
+#### 20230807.2更新日志
+- 添加菜单功能：订阅链接，节点状态
+- 添加命令功能：节点状态
 
 #### 20230807.1更新日志
 
@@ -137,7 +151,7 @@ python Bot.py
 
 ## 计划开发
 
-可以提交issuesg给我们提供建议功能，提交issuesg请把问题和建议讲清楚
+可以提交issues给我们提供建议功能，提交issues请把问题和建议讲清楚
 
 如果对该项目感兴趣，可以参与开发，邮箱地址：zhuli8@protonmail.com
 
@@ -145,8 +159,4 @@ python Bot.py
 
 ## 作者有话说
 
-订阅链接 涉及到面板后台的**站点网址**配置，但是配置没有添加到数据库，而是保存到php文件，不方便读取
-
-节点状态 是半完成状态，可以读取到数据库的节点数据，但是在线状态是存在Redis中，需要读取Redis 数据库的内容；也可以使用访问V2Board接口的方式来获取数据，但是需要登录而且速度可能较慢
-
-命令版本的查看流量和签到其实已经开发完成了，只是懒癌犯了没有提交
+写不动了

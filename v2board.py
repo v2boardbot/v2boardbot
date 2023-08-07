@@ -5,6 +5,8 @@ import requests
 from peewee import *
 import random
 
+from Utils import getNodes
+from config import URL
 from models import V2User, BotUser, V2ServerVmess
 
 
@@ -124,6 +126,11 @@ def _sub(telegram_id):
 '''
     return text
 
+def _mysub(telegram_id):
+    v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
+    if not v2_user:
+        return '未绑定,请先绑定'
+    return f'{URL}/api/v1/client/subscribe?token={v2_user.token}'
 
 def _lucky(telegram_id):
     botuser = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
@@ -164,12 +171,7 @@ def _node(telegram_id):
     v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
     if not v2_user:
         return '未绑定,请先绑定'
-    text = ''
-    # (time() - 300 > $server['last_check_at']) ? 0: 1;
-    for vmess in V2ServerVmess.select():
-        is_online = time.time() - 300 > vmess.last_check_at
-        text += vmess.name + '  ' + '在线\n'
-    return text
+    return getNodes()
 
 
 # b9bc3bee61de39f04047dbf8dca12e97
