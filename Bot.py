@@ -6,15 +6,15 @@ from telegram.ext import (
     CallbackQueryHandler,
     CommandHandler,
     ContextTypes,
-    ConversationHandler,
+    ConversationHandler, MessageHandler, filters,
 )
 
 from MenuHandle import *
 from MyCommandHandler import *
 from keyboard import start_keyboard
-from v2board import _bind, _checkin, _traffic, _lucky
+from v2board import _bind, _checkin, _traffic, _lucky, _addtime
 from models import Db, BotDb
-from config import START_ROUTES, END_ROUTES, TOKEN, HTTP_PROXY, HTTPS_PROXY
+from config import START_ROUTES, END_ROUTES, TOKEN, HTTP_PROXY, HTTPS_PROXY, ADMIN_TELEGRAM_ID
 
 # 设置代理，如果在国内需要设置，如果在国外就不需要设置，注释即可
 if HTTP_PROXY:
@@ -29,7 +29,16 @@ logging.basicConfig(
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    reply_markup = InlineKeyboardMarkup(start_keyboard)
+    if update.effective_user.id == ADMIN_TELEGRAM_ID and update.effective_message.chat.type != 'group':
+        start_keyboard_admin = [
+            InlineKeyboardButton(text='⏱添加时长', callback_data='addtime'),
+            InlineKeyboardButton(text='🔁重置流量', callback_data='resetdata')
+        ]
+        start_keyboard_copy = start_keyboard.copy()
+        start_keyboard_copy.append(start_keyboard_admin)
+        reply_markup = InlineKeyboardMarkup(start_keyboard_copy)
+    else:
+        reply_markup = InlineKeyboardMarkup(start_keyboard)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text='my Bot', reply_markup=reply_markup)
     await update.message.reply_text('尊敬的用户，欢迎使用K23223Bot\n"春风不写失意，梦醒仍寻旧忆。"', reply_markup=reply_markup)
     return START_ROUTES
@@ -66,6 +75,21 @@ async def lucky(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=text)
 
 
+# 获取电报id
+async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(chat_id=update.effective_user.id, text=update.effective_chat.id)
+
+
+async def handle_input_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_input = update.message.text
+    try:
+        text = _addtime(int(user_input))
+    except:
+        text = '输入有误，请输入整数'
+    await update.message.reply_text(text)
+    return ConversationHandler.END
+
+
 if __name__ == '__main__':
     # 数据库连接
     # Db.connect()
@@ -74,6 +98,7 @@ if __name__ == '__main__':
     application = Application.builder().token(TOKEN).build()
     CommandList = [
         CommandHandler("start", start),
+        CommandHandler("myid", myid),
         CommandHandler("checkin", command_checkin),  # 处理签到命令
         CommandHandler('bind', command_bind),  # 处理绑定命令
         CommandHandler('unbind', command_unbind),  # 处理解绑命令
@@ -85,6 +110,7 @@ if __name__ == '__main__':
         entry_points=CommandList,
         states={
             START_ROUTES: [
+                CallbackQueryHandler(menu_addtime, pattern="^addtime"),
                 CallbackQueryHandler(menu_wallet, pattern="^wallet"),
                 CallbackQueryHandler(menu_checkin, pattern="^checkin$"),
                 CallbackQueryHandler(menu_sub, pattern="^sub$"),
@@ -96,6 +122,9 @@ if __name__ == '__main__':
                 CallbackQueryHandler(end, pattern="^end$"),
                 # CallbackQueryHandler(three, pattern="^" + str(THREE) + "$"),
                 # CallbackQueryHandler(four, pattern="^" + str(FOUR) + "$"),
+            ],
+            WAITING_INPUT: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_input_text)
             ]
         },
         fallbacks=CommandList,

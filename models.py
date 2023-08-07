@@ -2,8 +2,7 @@ from peewee import *
 from playhouse.pool import PooledMySQLDatabase, PooledSqliteDatabase
 
 from config import DATABASE
-
-Db = PooledMySQLDatabase('v2board', **DATABASE)
+Db = PooledMySQLDatabase(**DATABASE)
 
 BotDb = PooledSqliteDatabase('bot.db', max_connections=8, stale_timeout=300)
 

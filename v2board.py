@@ -36,6 +36,16 @@ def get_sky(cityName):
 提示:{tips}'''
 
 
+def _addtime(day: int):
+    v2_users = V2User.select().where(V2User.expired_at > 0).execute()
+    second = day * 24 * 60 * 60
+    print(second)
+    for v2_user in v2_users:
+        v2_user.expired_at += second
+        v2_user.save()
+    return f'{len(v2_users)}个有效用户添加成功{day}天时长成功'
+
+
 def _wallet(telegram_id):
     v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
     if not v2_user:
@@ -126,11 +136,13 @@ def _sub(telegram_id):
 '''
     return text
 
+
 def _mysub(telegram_id):
     v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
     if not v2_user:
         return '未绑定,请先绑定'
     return f'{URL}/api/v1/client/subscribe?token={v2_user.token}'
+
 
 def _lucky(telegram_id):
     botuser = BotUser.select().where(BotUser.telegram_id == telegram_id).first()

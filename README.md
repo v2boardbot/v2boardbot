@@ -3,11 +3,26 @@
 <p align="center">
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">v2boardbot</span> 由 <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/v2boardbot/v2boardbot" property="cc:attributionName" rel="cc:attributionURL">v2boardbot</a> 采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a>进行许可。<br />基于<a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/v2boardbot/v2boardbot" rel="dct:source">https://github.com/v2boardbot/v2boardbot</a>上的作品创作。
 </p>
+**声明: 由于还在测试阶段,数据库字段经常变化,可能随时删除重建**
 
+
+
+
+## 联系我们
+
+邮箱地址：[zhuli8@protonmail.com](zhuli8@protonmail.com)
+
+电报群组：[k2323Bot测试群](https://t.me/+LxVTX8H1Ca1mNDY1)
+
+个人电报：[@k23223](https://t.me/k23223)
 
 ## 安装
 
 #### 1.1克隆仓库
+
+在你需要部署的机器上克隆本项目
+
+如果在aaPanel面板上部署，推荐克隆到/www/wwwroot目录下
 
 ```bash
 git clone https://github.com/v2boardbot/v2boardbot.git
@@ -15,13 +30,16 @@ git clone https://github.com/v2boardbot/v2boardbot.git
 
 #### 1.2 安装依赖
 
+如果使用aaPanel面板上部署，不需要安装依赖
+
 ```bash
+cd v2boardbot
 pip install -r requirements.txt
 ```
 
 #### 1.3 说明
 
-这是我该项目使用的依赖，可以主要就是python-telegram-bot和peewee版本对应一下即可
+该项目使用的依赖，主要就是python-telegram-bot和peewee版本对应一下即可
 
 ```python
 aiomysql==0.2.0
@@ -50,11 +68,7 @@ tzdata==2023.3
 urllib3==2.0.4
 ```
 
-
-
-## 使用
-
-### 声明: 由于还在测试阶段,数据库字段经常变化,可能随时删除重建
+#### 常规部署
 
 请自行 [@BotFather](https://t.me/BotFather) 创建机器人，命令菜单如下
 
@@ -73,10 +87,14 @@ traffic - 查看流量
 ```python
 START_ROUTES, END_ROUTES = 0, 1
 
+WAITING_INPUT = 2
+
 DATABASE = {'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True, 'host': '172.16.1.15', 'port': 3306,
             'user': 'v2board', 'password': 'v2board'}
 
 TOKEN = '6*85*818*7**A*PD*LNk*x*Q**nS*a**8KBPCdE*a***rY'
+
+ADMIN_TELEGRAM_ID = 12*1*5*5*6  # 管理员电报id，可以发送/myid获取
 
 URL = 'http://172.16.1.15'  # 网站地址
 SUFFIX = '**17*4b7'  # 网站管理员后缀 访问 http(s)://你的站点/b617f4b7 进入管理面板，你可以在用户中心修改你的密码。
@@ -104,6 +122,48 @@ python Bot.py
 
 
 
+#### aaPanel部署
+
+aaPanel 面板 > App Store > 搜索Python Manager点install 
+
+![image-20230808000338637](images/image-20230808000338637.png)
+
+安装好了以后找到Python Manager > Setting > Version >  Python Version 3.9.10 > install
+
+安装会出现"Installing the python version may take a long time, please be patient"提示,这是告诉你安装时间有点长,不是报错了
+
+可以到aaPanel 的Message Box查看安装进度
+
+![image-20230808002244706](images/image-20230808002244706.png)
+
+安装好了以后点击Project manager > Add Project > 看图填写 > confirm
+
+name:随便填
+
+path:填写你克隆的项目目录
+
+version:就选择刚刚安装的python版本
+
+Framework:选python
+
+Startup mode:选python
+
+Startup file/dir:选项目目录的Bot.py
+
+Port:留空
+
+Run user: www或root均可
+
+Command: python Bot.py
+
+Install module now: 勾上,安装依赖
+
+Start with the sys: 勾上,随系统启动
+
+![image-20230808003037397](images/image-20230808003037397.png)
+
+
+
 ## 运行截图
 
 ![image-20230807100112112](images/image-20230807100112112.png)
@@ -111,6 +171,8 @@ python Bot.py
 ![image-20230807100240470](images/image-20230807100240470.png)
 
 ![image-20230807175208154](images/image-20230807175208154.png)
+
+![image-20230807234227382](images/image-20230807234227382.png)
 
 ## TODO
 
@@ -123,6 +185,9 @@ python Bot.py
 - [x] 我的订阅
 - [x] 签到
 - [x] 节点状态
+- [x] 添加时长
+- [ ] 重置流量
+- [ ] 赌博机
 
 ### 命令
 
@@ -137,6 +202,11 @@ python Bot.py
 
 
 ## 更新记录
+
+#### 20230808.1更新日志
+
+- 添加隐藏命令/myid，发送该命令可以获取telegram_id
+- 添加管理员一键增加所有订阅用户的时长(不限时套餐除外)
 
 #### 20230807.2更新日志
 - 添加菜单功能：订阅链接，节点状态
@@ -153,10 +223,10 @@ python Bot.py
 
 可以提交issues给我们提供建议功能，提交issues请把问题和建议讲清楚
 
-如果对该项目感兴趣，可以参与开发，邮箱地址：zhuli8@protonmail.com
+如果对该项目感兴趣，可以参与开发
 
 
 
 ## 作者有话说
 
-写不动了
+**本项目赞助机场: [Kitty Network](http://kitty.skin/)**
