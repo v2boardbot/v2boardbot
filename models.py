@@ -109,6 +109,7 @@ class BotUser(Model):
     telegram_id = BigIntegerField(null=True)
     v2_user = ForeignKeyField(V2User, backref='v2user')
     sign_time = DateTimeField(null=True)
+    lucky_time = DateTimeField(null=True)
 
     class Meta:
         database = BotDb

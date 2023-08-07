@@ -4,6 +4,7 @@
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">v2boardbot</span> 由 <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/v2boardbot/v2boardbot" property="cc:attributionName" rel="cc:attributionURL">v2boardbot</a> 采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a>进行许可。<br />基于<a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/v2boardbot/v2boardbot" rel="dct:source">https://github.com/v2boardbot/v2boardbot</a>上的作品创作。
 </p>
 
+
 ## 安装
 
 #### 1.1克隆仓库
@@ -49,15 +50,17 @@ tzdata==2023.3
 urllib3==2.0.4
 ```
 
+
+
 ## 使用
 
 请自行 [@BotFather](https://t.me/BotFather) 创建机器人，命令菜单如下
 
 ```text
-start - 展开管理面板(仅限私聊)
+start - 展开管理面板
 bind - 绑定账号(仅限私聊)
-checkin - 签到
-lucky - 抽奖
+checkin - 每日签到
+lucky - 幸运抽奖
 wallet - 查看钱包
 traffic - 查看流量
 ```
@@ -91,38 +94,54 @@ python Bot.py
 ![image-20230806170408976](images/image-20230806170408976.png)
 
 
+
 ## 运行截图
 
 ![image-20230806170548614](images/image-20230806170548614.png)
 
 ![image-20230806171037159](images/image-20230806171037159.png)
 
+
+
 ## TODO
 
 ### 菜单
 
-- [ ] 我的钱包
+- [x] 我的钱包
 - [x] 流量查询
+- [x] 幸运抽奖
 - [ ] 订阅链接
 - [x] 我的订阅
 - [x] 签到
 - [x] 节点状态
 
-
 ### 命令
 
 - [x] 绑定账号
 - [x] 解绑账号
-- [x] 签到
-- [ ] 抽奖
-- [ ] 查看钱包
-- [ ] 查看流量
+- [x] 每日签到
+- [x] 幸运抽奖
+- [x] 查看钱包
+- [x] 查看流量
+
+
+
+## 更新记录
+
+#### 20230807.1更新日志
+
+- 添加菜单功能：我的钱包，幸运抽奖
+- 添加命令功能：幸运抽奖，查看钱包，查看流量
+
+
 
 ## 计划开发
 
 可以提交issuesg给我们提供建议功能，提交issuesg请把问题和建议讲清楚
 
 如果对该项目感兴趣，可以参与开发，邮箱地址：zhuli8@protonmail.com
+
+
 
 ## 作者有话说
 

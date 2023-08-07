@@ -8,8 +8,24 @@ from telegram.ext import (
 )
 
 from keyboard import return_keyboard
-from v2board import _bind, _checkin, _traffic, _lucky, _sub, _node
+from v2board import _bind, _checkin, _traffic, _lucky, _sub, _node, _wallet
 from config import START_ROUTES, END_ROUTES
+
+
+# 钱包
+async def menu_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    text = _wallet(update.effective_user.id)
+    keyboard = [
+        return_keyboard,
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text=text, reply_markup=reply_markup
+    )
+    return START_ROUTES
+
 
 # 菜单签到
 async def menu_checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -39,11 +55,26 @@ async def menu_sub(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     return START_ROUTES
 
+
 # 流量查询
 async def menu_traffic(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     text = _traffic(update.effective_user.id)
+    keyboard = [
+        return_keyboard,
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text=text, reply_markup=reply_markup
+    )
+    return START_ROUTES
+
+# 幸运抽奖
+async def menu_lucky(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    text = _lucky(update.effective_user.id)
     keyboard = [
         return_keyboard,
     ]

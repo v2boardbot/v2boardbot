@@ -6,7 +6,7 @@ start_keyboard = [
         InlineKeyboardButton(text='📃流量查询', callback_data='traffic'),
     ],
     [
-        InlineKeyboardButton(text='📖订阅链接(仅限私聊)', callback_data='suburl'),
+        InlineKeyboardButton(text='✨幸运抽奖', callback_data='lucky'),
         InlineKeyboardButton(text='📒我的订阅', callback_data='sub'),
     ],
     [

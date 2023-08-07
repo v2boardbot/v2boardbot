@@ -34,6 +34,19 @@ def get_sky(cityName):
 提示:{tips}'''
 
 
+def _wallet(telegram_id):
+    v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
+    if not v2_user:
+        return '未绑定,请先绑定'
+    text = f'''💰我的钱包
+————————————
+钱包总额：{round((v2_user.balance + v2_user.commission_balance) / 100, 2)} 元
+账户余额：{round(v2_user.balance / 100, 2)} 元
+推广佣金：{round(v2_user.commission_balance / 100, 2)} 元
+'''
+    return text
+
+
 def _bind(token, telegram_id):
     # 查询telegram_id是否绑定了其他账号
     botuser = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
@@ -113,14 +126,20 @@ def _sub(telegram_id):
 
 
 def _lucky(telegram_id):
-    v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
-    if not v2_user:
+    botuser = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
+    if not botuser:
         return '未绑定,请先绑定'
 
+    # 检查抽奖间隔时间
+    if botuser.lucky_time and (datetime.now() - botuser.lucky_time).seconds < 3600:
+        return f'请{3600 - (datetime.now() - botuser.lucky_time).seconds}秒后再来抽奖哦!'
     num = random.randint(-10240, 10240)
     flow = num * 1024 * 1024
-    v2_user.transfer_enable += flow
-    v2_user.save()
+    botuser.v2_user.transfer_enable += flow
+    botuser.lucky_time = datetime.now()
+
+    botuser.v2_user.save()
+    botuser.save()
     return f'抽奖成功,{round(num / 1024, 2)}GB流量'
 
 

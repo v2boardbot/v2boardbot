@@ -7,7 +7,7 @@ from telegram.ext import (
     ConversationHandler,
 )
 from keyboard import return_keyboard
-from v2board import _bind, _checkin, _traffic, _lucky, _unbind
+from v2board import _bind, _checkin, _traffic, _lucky, _unbind, _wallet
 from config import START_ROUTES, END_ROUTES
 
 
@@ -46,6 +46,39 @@ async def command_bind(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def command_unbind(update: Update, context: ContextTypes.DEFAULT_TYPE):
     telegram_id = update.effective_user.id
     text = _unbind(telegram_id)
+    keyboard = [
+        return_keyboard,
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(text=text, reply_markup=reply_markup)
+    return START_ROUTES
+
+# 抽奖
+async def command_lucky(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    telegram_id = update.effective_user.id
+    text = _lucky(telegram_id)
+    keyboard = [
+        return_keyboard,
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(text=text, reply_markup=reply_markup)
+    return START_ROUTES
+
+# 查看钱包
+async def command_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    telegram_id = update.effective_user.id
+    text = _wallet(telegram_id)
+    keyboard = [
+        return_keyboard,
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(text=text, reply_markup=reply_markup)
+    return START_ROUTES
+
+# 流量查询
+async def command_traffic(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    telegram_id = update.effective_user.id
+    text = _traffic(telegram_id)
     keyboard = [
         return_keyboard,
     ]
