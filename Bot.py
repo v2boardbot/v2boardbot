@@ -1,6 +1,8 @@
 import logging
 import os
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton
+
+import telegram
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, Dice
 from telegram.ext import (
     Application,
     CallbackQueryHandler,
@@ -11,10 +13,12 @@ from telegram.ext import (
 
 from MenuHandle import *
 from MyCommandHandler import *
+from Utils import slot_machine
 from keyboard import start_keyboard
 from v2board import _bind, _checkin, _traffic, _lucky, _addtime
 from models import Db, BotDb, BotUser
-from config import START_ROUTES, END_ROUTES, TOKEN, HTTP_PROXY, HTTPS_PROXY, ADMIN_TELEGRAM_ID
+from config import TOKEN, HTTP_PROXY, HTTPS_PROXY, ADMIN_TELEGRAM_ID
+from Utils import START_ROUTES, END_ROUTES
 
 # 设置代理，如果在国内需要设置，如果在国外就不需要设置，注释即可
 if HTTP_PROXY:
@@ -40,7 +44,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         reply_markup = InlineKeyboardMarkup(start_keyboard)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text='my Bot', reply_markup=reply_markup)
-    await update.message.reply_text('尊敬的用户，欢迎使用K23223Bot\n"春风不写失意，梦醒仍寻旧忆。"', reply_markup=reply_markup)
+    await update.message.reply_text('尊敬的用户，欢迎使用v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"', reply_markup=reply_markup)
     return START_ROUTES
 
 
@@ -49,7 +53,7 @@ async def start_over(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     reply_markup = InlineKeyboardMarkup(start_keyboard)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text='my Bot', reply_markup=reply_markup)
-    await query.edit_message_text('尊敬的用户，欢迎使用K23223Bot\n"春风不写失意，梦醒仍寻旧忆。"', reply_markup=reply_markup)
+    await query.edit_message_text('尊敬的用户，欢迎使用v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"', reply_markup=reply_markup)
     return START_ROUTES
 
 
@@ -61,18 +65,6 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await query.answer()
     await query.edit_message_text(text="欢迎下次光临！")
     return ConversationHandler.END
-
-
-# 查看流量
-async def traffic(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = _traffic(update.effective_chat.id)
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=text)
-
-
-# 抽奖
-async def lucky(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = _lucky(update.effective_chat.id)
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=text)
 
 
 # 获取电报id
@@ -90,10 +82,12 @@ async def handle_input_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 
+async def quit_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('已退出输入模式')
+    return ConversationHandler.END
+
+
 if __name__ == '__main__':
-
-
-
     # 面板数据库连接
     Db.connect()
     if os.path.exists('bot.db'):
@@ -112,12 +106,14 @@ if __name__ == '__main__':
         CommandHandler('lucky', command_lucky),  # 处理幸运抽奖命令
         CommandHandler('wallet', command_wallet),  # 处理查看钱包命令
         CommandHandler('traffic', command_traffic),  # 处理查看流量命令
+
     ]
     conv_handler = ConversationHandler(
         entry_points=CommandList,
         states={
             START_ROUTES: [
                 CallbackQueryHandler(menu_addtime, pattern="^addtime"),
+                CallbackQueryHandler(menu_slot_machine, pattern="^slot_machine"),
                 CallbackQueryHandler(menu_wallet, pattern="^wallet"),
                 CallbackQueryHandler(menu_checkin, pattern="^checkin$"),
                 CallbackQueryHandler(menu_sub, pattern="^sub$"),
@@ -131,6 +127,10 @@ if __name__ == '__main__':
                 # CallbackQueryHandler(four, pattern="^" + str(FOUR) + "$"),
             ],
             WAITING_INPUT: [
+                MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_input),
+                MessageHandler(filters.Dice(), slot_machine),
+            ],
+            'addtime': [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_input_text)
             ]
         },

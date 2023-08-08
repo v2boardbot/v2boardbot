@@ -8,9 +8,10 @@ from telegram.ext import (
     ConversationHandler,
 )
 
+from config import SLOT_MACHINE
 from keyboard import return_keyboard
 from v2board import _bind, _checkin, _traffic, _lucky, _sub, _node, _wallet,_mysub
-from config import START_ROUTES, END_ROUTES, WAITING_INPUT
+from Utils import START_ROUTES, END_ROUTES, WAITING_INPUT
 
 
 # 添加时长 - 管理员命令
@@ -23,6 +24,19 @@ async def menu_addtime(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     await query.edit_message_text(
         text='请输入发送需要添加的时长，单位：天', reply_markup=reply_markup
+    )
+    return 'addtime'
+
+# 老虎机
+async def menu_slot_machine(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    keyboard = [
+        return_keyboard,
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text=f'请发送🎰表情，可以连续发送\n当前赔率:1赔{SLOT_MACHINE}\n发送不玩了、退出、quit退出老虎机', reply_markup=reply_markup
     )
     return WAITING_INPUT
 
@@ -121,23 +135,6 @@ async def menu_node(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     text = _node(update.effective_user.id)
-    table = [
-        ["名称", "状态", "在线"],
-        ["美国ssr", "未运行", "0人"],
-        ["美国v2ray", "未运行", "0"],
-        ["🌅期许 | 你要开心^_^", "未运行", "0"],
-        ["🇭🇰香港 | HyTron 01 1.0x", "未运行", "0"],
-        ["🇭🇰香港 | IPV6 02 1.0x", "未运行", "245人"],
-        ["🇭🇰香港 | HyTron 01 1.0x", "未运行", "0"],
-        ["🇭🇰香港 | IPV6 03 1.0x", "未运行", "0"],
-        ["🇭🇰香港 | HyTron 04 1.0x", "未运行", "0"],
-    ]
-
-    # keyboard = []
-    # for row in table:
-    #     buttons_row = [InlineKeyboardButton(cell, callback_data="ignore") for cell in row]
-    #     keyboard.append(buttons_row)
-    # keyboard.append(return_keyboard)
     keyboard = [
         return_keyboard,
     ]

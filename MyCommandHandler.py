@@ -8,7 +8,7 @@ from telegram.ext import (
 )
 from keyboard import return_keyboard
 from v2board import _bind, _checkin, _traffic, _lucky, _unbind, _wallet
-from config import START_ROUTES, END_ROUTES
+from Utils import START_ROUTES, END_ROUTES
 
 
 # 签到

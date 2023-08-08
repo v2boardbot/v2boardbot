@@ -3,7 +3,9 @@
 <p align="center">
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">v2boardbot</span> 由 <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/v2boardbot/v2boardbot" property="cc:attributionName" rel="cc:attributionURL">v2boardbot</a> 采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a>进行许可。<br />基于<a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/v2boardbot/v2boardbot" rel="dct:source">https://github.com/v2boardbot/v2boardbot</a>上的作品创作。
 </p>
-**声明: 由于还在测试阶段,数据库字段经常变化,可能随时删除重建**
+
+
+##### 声明: 由于还在测试阶段,数据库字段经常变化,可能随时删除重建
 
 
 
@@ -68,7 +70,7 @@ tzdata==2023.3
 urllib3==2.0.4
 ```
 
-#### 常规部署
+#### 机器人创建
 
 请自行 [@BotFather](https://t.me/BotFather) 创建机器人，命令菜单如下
 
@@ -82,6 +84,16 @@ wallet - 查看钱包
 traffic - 查看流量
 ```
 
+#### 机器人群组隐私设置
+
+找[@BotFather](https://t.me/BotFather) 发送`/mybots` > 你的机器人 > Bot Settings > Group Privacy > Turn off
+
+如果是Turn on就是禁用隐私设置了，不需要更改
+
+老虎机等玩法依赖 Group Privacy ，如果 Group Privacy 为Turn off 将无法使用
+
+#### 配置文件
+
 按照示例填写自己的配置文件并保存为config.py,下面个人信息已脱敏处理
 
 ```python
@@ -89,12 +101,14 @@ START_ROUTES, END_ROUTES = 0, 1
 
 WAITING_INPUT = 2
 
-DATABASE = {'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True, 'host': '172.16.1.15', 'port': 3306,
-            'user': 'v2board', 'password': 'v2board'}
+DATABASE = {'database': '数据库名', 'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True, 'host': '数据库地址，如果和v2board部署在一起就填写127.0.0.1', 'port': 3306,
+            'user': '数据库用户名', 'password': '数据库密码'}
 
-TOKEN = '6*85*818*7**A*PD*LNk*x*Q**nS*a**8KBPCdE*a***rY'
+TOKEN = '6*85*818*7**A*PD*LNk*x*Q**nS*a**8KBPCdE*a***rY' # 机器人token
 
 ADMIN_TELEGRAM_ID = 12*1*5*5*6  # 管理员电报id，可以发送/myid获取
+
+SLOT_MACHINE = 10  # 老虎机赔率
 
 URL = 'http://172.16.1.15'  # 网站地址
 SUFFIX = '**17*4b7'  # 网站管理员后缀 访问 http(s)://你的站点/b617f4b7 进入管理面板，你可以在用户中心修改你的密码。
@@ -106,7 +120,9 @@ HTTPS_PROXY = 'http://127.0.0.1:1082'  # 同上
 
 ```
 
-再运行Bot.py即可
+#### 常规部署（不推荐）
+
+常规部署安装好依赖以后直接运行Bot.py即可
 
 ```bash
 python Bot.py
@@ -160,6 +176,14 @@ Start with the sys: 勾上,随系统启动
 
 ![image-20230808101359165](images/image-20230808101359165.png)
 
+
+
+#### 更新
+
+项目更新以后在你克隆的项目目录里执行`git pull`，然后阅读[配置文件](#配置文件)是否发生变化；如果有变化则更新你的配置文件，如果更新日志中存在本地数据库更新类似的提示，删除本地的bot.db；未发生变化，去aaPanel重启项目即可更新
+
+
+
 ## 运行截图
 
 ![image-20230807100112112](images/image-20230807100112112.png)
@@ -169,6 +193,8 @@ Start with the sys: 勾上,随系统启动
 ![image-20230807175208154](images/image-20230807175208154.png)
 
 ![image-20230807234227382](images/image-20230807234227382.png)
+
+
 
 ## TODO
 
@@ -183,7 +209,9 @@ Start with the sys: 勾上,随系统启动
 - [x] 节点状态
 - [x] 添加时长
 - [ ] 重置流量
-- [ ] 赌博机
+- [x] 老虎机
+- [ ] 日流量排行
+- [ ] 月流量排行
 
 ### 命令
 
@@ -193,15 +221,25 @@ Start with the sys: 勾上,随系统启动
 - [x] 幸运抽奖
 - [x] 查看钱包
 - [x] 查看流量
-- [x] 节点状态
 
 
 
 ## 更新记录
 
+#### 20230808.4更新日志
+
+- 日常修复若干bug
+- 优化菜单图标
+- 优化部署教程
+- 增加老虎机玩法
+
+#### 20230808.3更新日志
+
+- 日常修复若干bug
+
 #### 20230808.2更新日志
 
-- 修改若干bug，修改部署教程
+- 修改若干bug，优化部署教程
 - 修改机器人数据库初始化为自动初始化
 
 #### 20230808.1更新日志
