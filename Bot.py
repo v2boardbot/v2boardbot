@@ -13,7 +13,7 @@ from MenuHandle import *
 from MyCommandHandler import *
 from keyboard import start_keyboard
 from v2board import _bind, _checkin, _traffic, _lucky, _addtime
-from models import Db, BotDb
+from models import Db, BotDb, BotUser
 from config import START_ROUTES, END_ROUTES, TOKEN, HTTP_PROXY, HTTPS_PROXY, ADMIN_TELEGRAM_ID
 
 # 设置代理，如果在国内需要设置，如果在国外就不需要设置，注释即可
@@ -91,9 +91,16 @@ async def handle_input_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 if __name__ == '__main__':
-    # 数据库连接
-    # Db.connect()
-    BotDb.connect()
+
+
+
+    # 面板数据库连接
+    Db.connect()
+    if os.path.exists('bot.db'):
+        res = BotDb.connect()
+    else:
+        res = BotDb.connect()
+        BotDb.create_tables([BotUser])
 
     application = Application.builder().token(TOKEN).build()
     CommandList = [
@@ -136,7 +143,7 @@ if __name__ == '__main__':
     application.run_polling()
 
     # 关闭数据库
-    # Db.close()
+    Db.close()
     BotDb.close()
 
     # 命令处理

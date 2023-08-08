@@ -106,13 +106,7 @@ HTTPS_PROXY = 'http://127.0.0.1:1082'  # 同上
 
 ```
 
-先运行init_db.py来初始化机器人使用的数据库，本地sqlite数据库，不需要任何配置
-
-```bash
-python init_db.py
-```
-
-在运行Bot.py即可
+再运行Bot.py即可
 
 ```bash
 python Bot.py
@@ -128,13 +122,13 @@ aaPanel 面板 > App Store > 搜索Python Manager点install
 
 ![image-20230808000338637](images/image-20230808000338637.png)
 
-安装好了以后找到Python Manager > Setting > Version >  Python Version 3.9.10 > install
+安装好了以后找到Python Manager > Setting > Version >  Python Version 3.9.7 > install
 
 安装会出现"Installing the python version may take a long time, please be patient"提示,这是告诉你安装时间有点长,不是报错了
 
 可以到aaPanel 的Message Box查看安装进度
 
-![image-20230808002244706](images/image-20230808002244706.png)
+![image-20230808100150703](images/image-20230808100150703.png)
 
 安装好了以后点击Project manager > Add Project > 看图填写 > confirm
 
@@ -142,7 +136,7 @@ name:随便填
 
 path:填写你克隆的项目目录
 
-version:就选择刚刚安装的python版本
+version:3.9.7
 
 Framework:选python
 
@@ -152,17 +146,19 @@ Startup file/dir:选项目目录的Bot.py
 
 Port:留空
 
-Run user: www或root均可
+Run user: root
 
-Command: python Bot.py
+Command: 留空
 
 Install module now: 勾上,安装依赖
 
 Start with the sys: 勾上,随系统启动
 
-![image-20230808003037397](images/image-20230808003037397.png)
+![image-20230808100748970](images/image-20230808100748970.png)
 
+运行起来即可，如果运行失败，可以点Log查看日志，解决不了提交issues
 
+![image-20230808101359165](images/image-20230808101359165.png)
 
 ## 运行截图
 
@@ -202,6 +198,11 @@ Start with the sys: 勾上,随系统启动
 
 
 ## 更新记录
+
+#### 20230808.2更新日志
+
+- 修改若干bug，修改部署教程
+- 修改机器人数据库初始化为自动初始化
 
 #### 20230808.1更新日志
 
