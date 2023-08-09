@@ -122,6 +122,8 @@ SUFFIX = '**17*4b7'  # 网站管理员后缀 访问 http(s)://你的站点/b617f
 EMAIL = "admin@qq.com"  # 网站管理员邮箱
 PASSWORD = "***5***7fcb6*d9*b**62a5c**eeb3e1"  # 网站管理员密码
 
+AUTO_DELETE = True # 是否开启赌博机自动删除，需要bot为群内管理员
+
 HTTP_PROXY = None # 如果你部署机器人得服务器可以访问电报官网，就不用管
 HTTPS_PROXY = None # 同上
 
