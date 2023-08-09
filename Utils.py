@@ -3,11 +3,12 @@ from peewee import MySQLDatabase
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 from models import V2User
-from config import URL, EMAIL, PASSWORD, SUFFIX, SLOT_MACHINE
+from config import URL, EMAIL, PASSWORD, SUFFIX, SLOT_MACHINE, DICE_RATE
 
 START_ROUTES, END_ROUTES = 0, 1
 
 WAITING_INPUT = 2
+
 
 def _admin_auth():  # 返回网站管理员auth_data
     api = URL + '/api/v1/passport/auth/login'
@@ -50,15 +51,42 @@ async def slot_machine(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if traffic < 1:
         await update.message.reply_text(text='你的流量已不足1GB，无法进行游戏')
         return ConversationHandler.END
-    elif update.message.dice.value in [1, 22, 43, 64]:
-        v2_user.transfer_enable += SLOT_MACHINE * 1024 ** 3
-        v2_user.save()
-        await update.message.reply_text(text=f'恭喜你中奖了，获得{SLOT_MACHINE}GB流量已经存入你的账户')
-    else:
-        await update.message.reply_text(text='很遗憾你没有中奖，流量已从你账户扣除1GB')
+
+    if update.message.forward_from or update.message.forward_sender_name:
         v2_user.transfer_enable -= 1024 ** 3
         v2_user.save()
+        await update.message.reply_text(text=f'由于你想投机取巧，因此没收你的下注流量!\n不和没有诚信的人玩，游戏结束!\n当前账户流量：{round(v2_user.transfer_enable / 1024 ** 3, 2)}GB')
+        return ConversationHandler.END
+    elif update.message.dice.emoji == '🎰' and update.message.dice.value in [1, 22, 43, 64]:
+        v2_user.transfer_enable += (SLOT_MACHINE - 1) * 1024 ** 3
+        v2_user.save()
+        await update.message.reply_text(
+            text=f'恭喜你中奖了，获得{SLOT_MACHINE}GB流量已经存入你的账户\n当前账户流量：{round(v2_user.transfer_enable / 1024 ** 3, 2)}GB')
+    elif update.message.dice.emoji == '🎲':
+        user = update.message.dice.value
+        bot_message = await update.message.reply_dice(emoji='🎲')
+        bot = bot_message.dice.value
+        if bot > user:
+            v2_user.transfer_enable -= 1024 ** 3
+            v2_user.save()
+            await update.message.reply_text(
+                text=f'很遗憾你没有中奖，流量已从你账户扣除1GB\n当前账户流量：{round(v2_user.transfer_enable / 1024 ** 3, 2)}GB')
+        elif bot == user:
+            await update.message.reply_text(
+                text=f'平局，已返还下注流量\n当前账户流量：{round(v2_user.transfer_enable / 1024 ** 3, 2)}GB')
+        else:
+            v2_user.transfer_enable += (DICE_RATE - 1) * 1024 ** 3
+            v2_user.save()
+            await update.message.reply_text(
+                text=f'恭喜你中奖了，获得{DICE_RATE}GB流量已经存入你的账户\n当前账户流量：{round(v2_user.transfer_enable / 1024 ** 3, 2)}GB')
+    else:
+        v2_user.transfer_enable -= 1024 ** 3
+        v2_user.save()
+        await update.message.reply_text(
+            text=f'很遗憾你没有中奖，流量已从你账户扣除1GB\n当前账户流量：{round(v2_user.transfer_enable / 1024 ** 3, 2)}GB')
+    print()
     return WAITING_INPUT
+
 
 if __name__ == '__main__':
     print(getNodes())

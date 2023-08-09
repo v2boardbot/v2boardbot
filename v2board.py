@@ -141,13 +141,16 @@ def _mysub(telegram_id):
     v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
     if not v2_user:
         return '未绑定,请先绑定'
-    return f'{URL}/api/v1/client/subscribe?token={v2_user.token}'
+    return f'您的订阅链接:{URL}/api/v1/client/subscribe?token={v2_user.token}'
 
 
 def _lucky(telegram_id):
     botuser = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
     if not botuser:
         return '未绑定,请先绑定'
+
+    if botuser.v2_user.expired_at in [None, 0]:
+        return '不限时套餐或未订阅不支持签到'
 
     # 检查抽奖间隔时间
     if botuser.lucky_time and (datetime.now() - botuser.lucky_time).seconds < 3600:

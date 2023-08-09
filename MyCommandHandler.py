@@ -29,8 +29,10 @@ async def command_bind(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return_keyboard,
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if update.message.chat.type == 'group':
+    if update.message.chat.type != 'private':
         text = '绑定用户仅限私聊使用，请私聊机器人'
+        await update.message.reply_text(text=text, reply_markup=reply_markup)
+        return START_ROUTES
     else:
         try:
             token = context.args[0].split('token=')[-1]

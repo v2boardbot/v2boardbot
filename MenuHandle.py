@@ -8,7 +8,7 @@ from telegram.ext import (
     ConversationHandler,
 )
 
-from config import SLOT_MACHINE
+from config import SLOT_MACHINE, DICE_RATE
 from keyboard import return_keyboard
 from v2board import _bind, _checkin, _traffic, _lucky, _sub, _node, _wallet,_mysub
 from Utils import START_ROUTES, END_ROUTES, WAITING_INPUT
@@ -36,7 +36,7 @@ async def menu_slot_machine(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await query.edit_message_text(
-        text=f'请发送🎰表情，可以连续发送\n当前赔率:1赔{SLOT_MACHINE}\n发送不玩了、退出、quit退出老虎机', reply_markup=reply_markup
+        text=f'请发送🎰或🎲表情，可以连续发送\n当前赔率:🎰1赔{SLOT_MACHINE} 🎲1赔{DICE_RATE}\n发送"不玩了"退出赌博模式', reply_markup=reply_markup
     )
     return WAITING_INPUT
 
@@ -84,7 +84,7 @@ async def menu_sub(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return START_ROUTES
 
 async def menu_mysub(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_message.chat.type == 'group':
+    if update.effective_message.chat.type != 'private':
         text = '查看订阅仅限私聊使用，请私聊机器人'
     else:
         text = _mysub(update.effective_user.id)

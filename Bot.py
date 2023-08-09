@@ -17,7 +17,7 @@ from Utils import slot_machine
 from keyboard import start_keyboard
 from v2board import _bind, _checkin, _traffic, _lucky, _addtime
 from models import Db, BotDb, BotUser
-from config import TOKEN, HTTP_PROXY, HTTPS_PROXY, ADMIN_TELEGRAM_ID
+from config import TOKEN, HTTP_PROXY, HTTPS_PROXY, ADMIN_TELEGRAM_ID, TITLE
 from Utils import START_ROUTES, END_ROUTES
 
 # 设置代理，如果在国内需要设置，如果在国外就不需要设置，注释即可
@@ -33,7 +33,7 @@ logging.basicConfig(
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id == ADMIN_TELEGRAM_ID and update.effective_message.chat.type != 'group':
+    if update.effective_user.id == ADMIN_TELEGRAM_ID and update.effective_message.chat.type == 'private':
         start_keyboard_admin = [
             InlineKeyboardButton(text='⏱添加时长', callback_data='addtime'),
             InlineKeyboardButton(text='🔁重置流量', callback_data='resetdata')
@@ -44,7 +44,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         reply_markup = InlineKeyboardMarkup(start_keyboard)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text='my Bot', reply_markup=reply_markup)
-    await update.message.reply_text('尊敬的用户，欢迎使用v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"', reply_markup=reply_markup)
+    await update.message.reply_text(TITLE, reply_markup=reply_markup)
     return START_ROUTES
 
 
@@ -53,7 +53,7 @@ async def start_over(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     reply_markup = InlineKeyboardMarkup(start_keyboard)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text='my Bot', reply_markup=reply_markup)
-    await query.edit_message_text('尊敬的用户，欢迎使用v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"', reply_markup=reply_markup)
+    await query.edit_message_text(TITLE, reply_markup=reply_markup)
     return START_ROUTES
 
 

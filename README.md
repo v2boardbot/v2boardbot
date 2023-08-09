@@ -20,6 +20,8 @@
 
 ## 安装
 
+### 当前ubuntu安装有问题，可以先用centos或者debian
+
 #### 1.1克隆仓库
 
 在你需要部署的机器上克隆本项目
@@ -97,26 +99,31 @@ traffic - 查看流量
 按照示例填写自己的配置文件并保存为config.py,下面个人信息已脱敏处理
 
 ```python
-START_ROUTES, END_ROUTES = 0, 1
-
-WAITING_INPUT = 2
-
-DATABASE = {'database': '数据库名', 'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True, 'host': '数据库地址，如果和v2board部署在一起就填写127.0.0.1', 'port': 3306,
-            'user': '数据库用户名', 'password': '数据库密码'}
+DATABASE = {
+    'database': '数据库名',
+    'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True,
+    'host': '数据库地址，如果和v2board部署在一起就填写127.0.0.1',
+    'port': 3306,
+    'user': '数据库用户名',
+    'password': '数据库密码'
+}
 
 TOKEN = '6*85*818*7**A*PD*LNk*x*Q**nS*a**8KBPCdE*a***rY' # 机器人token
 
 ADMIN_TELEGRAM_ID = 12*1*5*5*6  # 管理员电报id，可以发送/myid获取
 
 SLOT_MACHINE = 10  # 老虎机赔率
+DICE_RATE = 2  # 骰子赔率
+
+TITLE = '尊敬的用户，欢迎使用v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"' # 欢迎词，\n是换行；如果里面有双引号，最外面使用单引号，反之则反之
 
 URL = 'http://172.16.1.15'  # 网站地址
 SUFFIX = '**17*4b7'  # 网站管理员后缀 访问 http(s)://你的站点/b617f4b7 进入管理面板，你可以在用户中心修改你的密码。
 EMAIL = "admin@qq.com"  # 网站管理员邮箱
 PASSWORD = "***5***7fcb6*d9*b**62a5c**eeb3e1"  # 网站管理员密码
 
-HTTP_PROXY = 'http://127.0.0.1:1082'  # 如果需要代理，则填写http代理地址，不需要代理填写None
-HTTPS_PROXY = 'http://127.0.0.1:1082'  # 同上
+HTTP_PROXY = None # 如果你部署机器人得服务器可以访问电报官网，就不用管
+HTTPS_PROXY = None # 同上
 
 ```
 
@@ -198,6 +205,10 @@ Start with the sys: 勾上,随系统启动
 
 ## TODO
 
+- [ ] 和v2board机器人共存
+- [ ] 修改配置文件为yml
+- [ ] 修复在群组直接展示订阅链接
+
 ### 菜单
 
 - [x] 我的钱包
@@ -225,6 +236,13 @@ Start with the sys: 勾上,随系统启动
 
 
 ## 更新记录
+
+#### 20230809.1更新日志
+
+- 修复赌博机重大bug
+- 增加赌博筛子玩法
+- 修复幸运抽奖未订阅可抽奖
+- 自定义菜单欢迎词
 
 #### 20230808.4更新日志
 
