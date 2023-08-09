@@ -32,7 +32,7 @@ def getNodes():
         if item['show'] == 0:
             continue
         status = '在线' if item['available_status'] else '离线'
-        online = item['online'] if item['online'] else '0'
+        online = str(item['online'] if item['online'] else '0')
         online += "人"
         line = '节点名称:' + item['name'] + '\n' + '节点状态:' + status + '\n' + '在线人数:' + online + '\n'
         text += line + '----------------------------' + '\n'
