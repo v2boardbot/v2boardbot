@@ -28,9 +28,9 @@ TOKEN = config.TELEGRAM.token
 HTTP_PROXY = config.TELEGRAM.http_proxy
 HTTPS_PROXY = config.TELEGRAM.https_proxy
 
-if HTTP_PROXY:
+if HTTP_PROXY.find('未配置') == -1:
     os.environ['HTTP_PROXY'] = HTTP_PROXY
-if HTTPS_PROXY:
+if HTTPS_PROXY.find('未配置') == -1:
     os.environ['HTTPS_PROXY'] = HTTPS_PROXY
 
 logging.basicConfig(

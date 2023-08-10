@@ -3,6 +3,8 @@ import requests
 import yaml
 from peewee import *
 
+from models import V2User, Db, BotDb, BotUser
+
 
 def print_log(log, type_='tips'):
     if type_ == 'tips':
@@ -48,6 +50,23 @@ def check_database(config_path):
         check_database(config_path)
 
 
+def init_database(config_path):
+    Db.connect()
+    if os.path.exists('bot.db'):
+        res = BotDb.connect()
+    else:
+        res = BotDb.connect()
+        BotDb.create_tables([BotUser])
+    for v2_user in V2User.select():
+        if v2_user.telegram_id:
+            bot_user = BotUser.select().where(BotUser.telegram_id == v2_user.telegram_id).first()
+            if not bot_user:  # 数据库绑定了，但是本地bot.db没有数据
+                BotUser.create(telegram_id=v2_user.telegram_id, v2_user=v2_user)
+                print(v2_user.telegram_id, '本地bot.db没有该绑定信息')
+    Db.close()
+    BotDb.close()
+
+
 def check_telegram_connect(config_path):
     if os.path.exists(config_path):
         with open(config_path, 'r', encoding='utf8') as fp:
@@ -75,7 +94,6 @@ def check_telegram_connect(config_path):
                 save_config(config, config_path)
                 print_log(f'Welcome {res.json()["result"]["first_name"]} uses v2boardbot')
         except Exception as e:
-
             print_log(f'Telegram API connection failed:{e}', 'error')
             config['TELEGRAM']['http_proxy'] = input('请输入代理地址:')
             config['TELEGRAM']['https_proxy'] = config['TELEGRAM']['http_proxy']
@@ -150,9 +168,11 @@ def check_file(config_path):
 
         save_config(config)
 
+
 def init(config_path='config.yaml'):
     check_file(config_path)
     check_database(config_path)
+    init_database(config_path)
     check_telegram_connect(config_path)
     check_v2board(config_path)
 

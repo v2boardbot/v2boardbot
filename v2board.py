@@ -61,7 +61,7 @@ def _wallet(telegram_id):
 def _bind(token, telegram_id):
     # 查询telegram_id是否绑定了其他账号
     botuser = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
-    if botuser.__data__.get('v2_user') != 0:
+    if botuser and botuser.__data__.get('v2_user') != 0:
         return '该Telegram已经绑定了一个账号，请先解绑再绑定'
     v2_user = V2User.select().where(V2User.token == token).first()
     if not v2_user:
