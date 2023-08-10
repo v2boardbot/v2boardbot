@@ -62,6 +62,7 @@ peewee==3.16.2
 pydantic==1.10.8
 PyMySQL==1.1.0
 python-telegram-bot==20.4
+PyYAML==6.0.1
 requests==2.31.0
 sniffio==1.3.0
 socksio==1.0.0
@@ -147,6 +148,8 @@ aaPanel 面板 > App Store > 搜索Python Manager点install
 
 安装好了以后找到Python Manager > Setting > Version >  Python Version 3.9.7 > install
 
+**debian在python3.9.7测试通过**
+
 安装会出现"Installing the python version may take a long time, please be patient"提示,这是告诉你安装时间有点长,不是报错了
 
 可以到aaPanel 的Message Box查看安装进度
@@ -208,6 +211,7 @@ Start with the sys: 勾上,随系统启动
 - [ ] 和v2board机器人共存
 - [ ] 修改配置文件为yml
 - [ ] 修复在群组直接展示订阅链接
+- [ ] 增加赌博模式自定义下注
 
 ### 菜单
 

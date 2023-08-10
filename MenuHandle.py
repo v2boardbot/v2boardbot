@@ -8,7 +8,7 @@ from telegram.ext import (
     ConversationHandler,
 )
 
-from config import SLOT_MACHINE, DICE_RATE
+from config2 import SLOT_MACHINE, DICE_RATE
 from keyboard import return_keyboard
 from v2board import _bind, _checkin, _traffic, _lucky, _sub, _node, _wallet,_mysub
 from Utils import START_ROUTES, END_ROUTES, WAITING_INPUT

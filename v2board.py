@@ -6,7 +6,7 @@ from peewee import *
 import random
 
 from Utils import getNodes
-from config import URL
+from config2 import URL
 from models import V2User, BotUser, V2ServerVmess
 
 

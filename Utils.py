@@ -1,9 +1,10 @@
 import requests
+import yaml
 from peewee import MySQLDatabase
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 from models import V2User
-from config import URL, EMAIL, PASSWORD, SUFFIX, SLOT_MACHINE, DICE_RATE
+from config2 import URL, EMAIL, PASSWORD, SUFFIX, SLOT_MACHINE, DICE_RATE
 
 START_ROUTES, END_ROUTES = 0, 1
 
@@ -38,6 +39,21 @@ def getNodes():
     return text
 
 
+def read_config(item='all', config_path='config.yaml'):
+    with open(config_path, 'r') as fp:
+        config = yaml.safe_load(fp)
+    if item == 'all':
+        return config
+    else:
+        level1, level2 = item.split('.')
+        return config.get(level1, {}).get(level2, f'没有配置{item}')
+
+
+def save_config(config, config_path='config.yaml'):
+    with open(config_path, "w") as yaml_file:
+        yaml.dump(config, yaml_file, default_style=None)
+
+
 async def slot_machine(update: Update, context: ContextTypes.DEFAULT_TYPE):
     v2_user = V2User.select().where(V2User.telegram_id == update.effective_user.id).first()
     if not v2_user:
@@ -55,7 +71,8 @@ async def slot_machine(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.forward_from or update.message.forward_sender_name:
         v2_user.transfer_enable -= 1024 ** 3
         v2_user.save()
-        await update.message.reply_text(text=f'由于你想投机取巧，因此没收你的下注流量!\n不和没有诚信的人玩，游戏结束!\n当前账户流量：{round(v2_user.transfer_enable / 1024 ** 3, 2)}GB')
+        await update.message.reply_text(
+            text=f'由于你想投机取巧，因此没收你的下注流量!\n不和没有诚信的人玩，游戏结束!\n当前账户流量：{round(v2_user.transfer_enable / 1024 ** 3, 2)}GB')
         return ConversationHandler.END
     elif update.message.dice.emoji == '🎰' and update.message.dice.value in [1, 22, 43, 64]:
         v2_user.transfer_enable += (SLOT_MACHINE - 1) * 1024 ** 3
