@@ -4,9 +4,8 @@ from datetime import datetime
 import requests
 from peewee import *
 import random
-
+from Config import config
 from Utils import getNodes
-from config2 import URL
 from models import V2User, BotUser, V2ServerVmess
 
 
@@ -62,26 +61,32 @@ def _wallet(telegram_id):
 def _bind(token, telegram_id):
     # 查询telegram_id是否绑定了其他账号
     botuser = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
-    if botuser:
+    if botuser.__data__.get('v2_user') != 0:
         return '该Telegram已经绑定了一个账号，请先解绑再绑定'
     v2_user = V2User.select().where(V2User.token == token).first()
     if not v2_user:
         return '用户不存在'
     if v2_user.telegram_id:
         return '该账号已经绑定了Telegram账号'
-
-    BotUser.create(telegram_id=telegram_id, v2_user=v2_user)
-    v2_user.telegram_id = telegram_id
-    v2_user.save()
+    if botuser:
+        botuser.v2_user = v2_user
+        v2_user.telegram_id = telegram_id
+        v2_user.save()
+        botuser.save()
+    else:
+        BotUser.create(telegram_id=telegram_id, v2_user=v2_user)
+        v2_user.telegram_id = telegram_id
+        v2_user.save()
     return '绑定成功'
 
 
 def _unbind(telegram_id):
     bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
-    if bot_user:
+    if bot_user.__data__.get('v2_user') != 0:
         bot_user.v2_user.telegram_id = None
         bot_user.v2_user.save()
-        bot_user.delete_instance()
+        bot_user.v2_user = 0
+        bot_user.save()
         # V2User.update(telegram_id=None).where(V2User.telegram_id == telegram_id).execute()
         return '解绑成功'
     else:
@@ -141,7 +146,7 @@ def _mysub(telegram_id):
     v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
     if not v2_user:
         return '未绑定,请先绑定'
-    return f'您的订阅链接:{URL}/api/v1/client/subscribe?token={v2_user.token}'
+    return f'您的订阅链接:{config.WEBSITE.url}/api/v1/client/subscribe?token={v2_user.token}'
 
 
 def _lucky(telegram_id):

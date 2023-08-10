@@ -1,10 +1,7 @@
 import os
-import json
-
 import requests
 import yaml
 from peewee import *
-from Utils import save_config
 
 
 def print_log(log, type_='tips'):
@@ -16,9 +13,14 @@ def print_log(log, type_='tips'):
         print('Info', log)
 
 
+def save_config(config, config_path='config.yaml'):
+    with open(config_path, "w") as yaml_file:
+        yaml.dump(config, yaml_file, default_style=None)
+
+
 def check_database(config_path):
     if os.path.exists(config_path):
-        with open(config_path, 'r') as fp:
+        with open(config_path, 'r', encoding='utf8') as fp:
             config = yaml.safe_load(fp)
     else:
         config = {
@@ -48,7 +50,7 @@ def check_database(config_path):
 
 def check_telegram_connect(config_path):
     if os.path.exists(config_path):
-        with open(config_path, 'r') as fp:
+        with open(config_path, 'r', encoding='utf8') as fp:
             config = yaml.safe_load(fp)
     else:
         config = {
@@ -60,6 +62,8 @@ def check_telegram_connect(config_path):
         if config.get('TELEGRAM').get('http_proxy'):
             os.environ['HTTP_PROXY'] = config.get('TELEGRAM').get('http_proxy')
             os.environ['HTTPS_PROXY'] = config.get('TELEGRAM').get('https_proxy')
+        if not config.get('TELEGRAM').get('token'):
+            config['TELEGRAM']['token'] = input('请输入机器人Token:')
         try:
             res = requests.get(f'https://api.telegram.org/bot{config["TELEGRAM"]["token"]}/getMe')
             if res.json()['ok'] == False:
@@ -68,9 +72,11 @@ def check_telegram_connect(config_path):
                 save_config(config, config_path)
                 check_telegram_connect(config_path)
             else:
+                save_config(config, config_path)
                 print_log(f'Welcome {res.json()["result"]["first_name"]} uses v2boardbot')
-        except:
-            print_log('Telegram API connection failed', 'error')
+        except Exception as e:
+
+            print_log(f'Telegram API connection failed:{e}', 'error')
             config['TELEGRAM']['http_proxy'] = input('请输入代理地址:')
             config['TELEGRAM']['https_proxy'] = config['TELEGRAM']['http_proxy']
             save_config(config, config_path)
@@ -84,7 +90,7 @@ def check_telegram_connect(config_path):
 
 def check_v2board(config_path):
     if os.path.exists(config_path):
-        with open(config_path, 'r') as fp:
+        with open(config_path, 'r', encoding='utf8') as fp:
             config = yaml.safe_load(fp)
     else:
         config = {
@@ -126,11 +132,30 @@ def check_v2board(config_path):
         check_v2board(config_path)
 
 
+def check_file(config_path):
+    if not os.path.exists(config_path):
+        config = {
+            'TIGER': {},
+            'DICE': {},
+            'TELEGRAM': {
+                'token': None
+            },
+        }
+        config['TIGER']['switch'] = False
+        config['TIGER']['rate'] = 20
+        config['DICE']['switch'] = False
+        config['DICE']['rate'] = 2
+        config['TELEGRAM'][
+            'title'] = '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
+
+        save_config(config)
+
 def init(config_path='config.yaml'):
+    check_file(config_path)
     check_database(config_path)
     check_telegram_connect(config_path)
     check_v2board(config_path)
 
-    with open(config_path, 'r') as fp:
+    with open(config_path, 'r', encoding='utf8') as fp:
         config = yaml.safe_load(fp)
         return config

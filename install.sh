@@ -6,11 +6,15 @@ if ! command -v wget &> /dev/null; then
     if [ -f "/etc/debian_version" ]; then  # Debian
         sudo apt-get update
         sudo apt-get install -y wget
+        sudo apt-get install openssl
     elif [ -f "/etc/centos-release" ]; then  # CentOS
+        sudo yum update
         sudo yum install -y wget
+        sudo yum update openssl
     elif [ -f "/etc/lsb-release" ]; then  # Ubuntu
         sudo apt-get update
         sudo apt-get install -y wget
+        sudo apt-get install openssl
     else
         echo -e "\033[31mError: This version is not currently supported, only Centos, Ubuntu, and Debian versions are supported\033[0m"
         exit 1

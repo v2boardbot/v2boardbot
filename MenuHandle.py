@@ -8,9 +8,9 @@ from telegram.ext import (
     ConversationHandler,
 )
 
-from config2 import SLOT_MACHINE, DICE_RATE
+from Config import config
 from keyboard import return_keyboard
-from v2board import _bind, _checkin, _traffic, _lucky, _sub, _node, _wallet,_mysub
+from v2board import _bind, _checkin, _traffic, _lucky, _sub, _node, _wallet, _mysub
 from Utils import START_ROUTES, END_ROUTES, WAITING_INPUT
 
 
@@ -27,6 +27,7 @@ async def menu_addtime(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     return 'addtime'
 
+
 # 老虎机
 async def menu_slot_machine(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -36,9 +37,11 @@ async def menu_slot_machine(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await query.edit_message_text(
-        text=f'请发送🎰或🎲表情，可以连续发送\n当前赔率:🎰1赔{SLOT_MACHINE} 🎲1赔{DICE_RATE}\n发送"不玩了"退出赌博模式', reply_markup=reply_markup
+        text=f'请发送🎰或🎲表情，可以连续发送\n当前赔率:🎰1赔{config.TIGER.rate} 🎲1赔{config.DICE.rate}\n发送"不玩了"退出赌博模式',
+        reply_markup=reply_markup
     )
     return WAITING_INPUT
+
 
 # 钱包
 async def menu_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -82,6 +85,7 @@ async def menu_sub(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text=text, reply_markup=reply_markup
     )
     return START_ROUTES
+
 
 async def menu_mysub(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_message.chat.type != 'private':

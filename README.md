@@ -47,7 +47,7 @@ traffic - 查看流量
 在你需要部署的机器上克隆本项目
 
 ```bash
-git clone https://github.com/v2boardbot/v2boardbot.git
+git clone -b dev https://github.com/v2boardbot/v2boardbot.git
 ```
 
 #### 一键安装
@@ -75,8 +75,10 @@ sh install.sh
 
 ## TODO
 
-- [ ] 和v2board机器人共存
 - [ ] 增加赌博模式自定义下注
+- [ ] 添加骰子自定义开关
+- [ ] 添加自定义签到流量区间
+- [ ] 添加自定义抽奖流量区间
 
 ### 菜单
 
@@ -105,6 +107,12 @@ sh install.sh
 
 
 ## 更新记录
+
+#### 20230810.3 dev
+
+- 修复若干bug
+- 修复解绑重新绑定可重新签到
+- 代码优化
 
 #### 20230810.2 dev
 
