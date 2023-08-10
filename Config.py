@@ -74,7 +74,7 @@ class Config:
             if isinstance(section_obj, self.__ConfigSection):
                 new_section_dict = {}
                 for k, v in section_obj.to_dict().items():
-                    if type(v) == str and v.find('未配置') == -1:
+                    if str(v).find('未配置') == -1:
                         new_section_dict[k] = v
                 saved_config[section_name] = new_section_dict
         with open(config_path, 'w') as fp:
