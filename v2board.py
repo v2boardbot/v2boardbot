@@ -98,6 +98,10 @@ def _checkin(telegram_id):
     if not botuser:
         return '未绑定,请先绑定'
 
+    # 为了适应新版本
+    if botuser.__data__.get('v2_user') == 0:
+        return '未绑定,请先绑定'
+
     if botuser.v2_user.expired_at in [None, 0]:
         return '不限时套餐或未订阅不支持签到'
 
@@ -152,6 +156,10 @@ def _mysub(telegram_id):
 def _lucky(telegram_id):
     botuser = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
     if not botuser:
+        return '未绑定,请先绑定'
+
+    # 为了适应新版本
+    if botuser.__data__.get('v2_user') == 0:
         return '未绑定,请先绑定'
 
     if botuser.v2_user.expired_at in [None, 0]:
