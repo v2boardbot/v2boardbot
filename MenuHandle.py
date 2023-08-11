@@ -44,6 +44,10 @@ async def menu_gambling(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=reply_markup
         )
         return START_ROUTES
+        # 总开关
+    if config.GAME.switch != True:
+        await query.message.reply_text(text='当前赌博模式关闭，请联系管理员！')
+        return ConversationHandler.END
     await query.edit_message_text(
         text=f'请发送🎰或🎲表情，可以连续发送\n当前赔率:🎰1赔{config.TIGER.rate} 🎲1赔{config.DICE.rate}\n发送"不玩了"退出赌博模式',
         reply_markup=reply_markup

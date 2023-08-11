@@ -1,69 +1,75 @@
-from telegram import Update
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ContextTypes, ConversationHandler
 from Config import config
-from Utils import WAITING_INPUT
+from Utils import START_ROUTES
 from games.utils import get_traffic, edit_traffic
-from models import V2User
+from keyboard import return_keyboard
+from models import V2User, BotUser
 
 
 # 判断是否转发消息
-async def is_forward(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user):
+async def is_forward(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot_user):
     if update.message.forward_from or update.message.forward_sender_name:
-        result = f'由于你想投机取巧，因此没收你的下注流量!\n不和没有诚信的人玩，游戏结束!\n当前账户流量：{await edit_traffic(v2_user, -1)}GB'
+        result = f'由于你想投机取巧，因此没收你的下注流量!\n不和没有诚信的人玩，游戏结束!\n当前账户流量：{await edit_traffic(v2_user, bot_user.betting)}GB'
         return result
     else:
         return False
 
+
 # 判断能否流量是否够玩游戏
-async def can_games(v2_user):
+async def can_games(v2_user, bot_user):
     traffic = await get_traffic(v2_user)
-    if traffic < 1:
-        return '你的流量已不足，无法进行游戏'
+    if traffic < bot_user.betting:
+        return f'你的流量已不足{bot_user.betting}，无法进行游戏'
     else:
         return True
 
 
-async def tiger(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user):
+async def tiger(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot_user):
     # 开关
     if config.TIGER.switch != True:
-        return '当前老虎机游戏关闭，不可进行游戏'
+        return '当前老虎机游戏关闭，不可进行游戏', START_ROUTES
 
     # 判断能否玩游戏
-    can_game = await can_games(v2_user)
+    can_game = await can_games(v2_user, bot_user)
     if can_game != True:
         return can_game, ConversationHandler.END
 
     # 判断是否转发
-    forward = await is_forward(update, context, v2_user)
+    forward = await is_forward(update, context, v2_user, bot_user)
     if forward == False:
-        traffic = await edit_traffic(v2_user, -1)
-        rate = config.TIGER.rate
+        # 扣下注流量
+        traffic = await edit_traffic(v2_user, -bot_user.betting)
+        rate = config.TIGER.rate * bot_user.betting
         if update.message.dice.value in [1, 22, 43, 64]:
             # 中奖
             result = f'恭喜你中奖了，获得{rate}GB流量已经存入你的账户\n当前账户流量：{await edit_traffic(v2_user, rate)}GB'
         else:
             # 没中奖
-            result = f'很遗憾你没有中奖，流量已从你账户扣除1GB\n当前账户流量：{traffic}GB'
-        return result, WAITING_INPUT
+            result = f'很遗憾你没有中奖，流量已从你账户扣除{bot_user.betting}GB\n当前账户流量：{traffic}GB'
+        return result, START_ROUTES
     else:
         return forward, ConversationHandler.END
 
 
-async def dice_(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user):
+async def dice_(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot_user):
     # 开关
     if config.DICE.switch != True:
-        return '当前骰子游戏关闭，不可进行游戏'
+        return '当前骰子游戏关闭，不可进行游戏', START_ROUTES
 
     # 判断能否玩游戏
-    can_game = await can_games(v2_user)
+    can_game = await can_games(v2_user, bot_user)
     if can_game != True:
         return can_game, ConversationHandler.END
 
     # 判断是否转发
-    forward = await is_forward(update, context, v2_user)
+    forward = await is_forward(update, context, v2_user, bot_user)
     if forward == False:
-        traffic = await edit_traffic(v2_user, -1)
-        rate = config.DICE.rate
+        # 扣下注流量
+        traffic = await edit_traffic(v2_user, -bot_user.betting)
+        # 如果中奖获得的流量
+        rate = config.DICE.rate * bot_user.betting
+
         user = update.message.dice.value
         bot_message = await update.message.reply_dice(emoji='🎲')
         bot = bot_message.dice.value
@@ -72,32 +78,133 @@ async def dice_(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user):
             result = f'恭喜你中奖了，获得{rate}GB流量已经存入你的账户\n当前账户流量：{await edit_traffic(v2_user, rate)}GB'
         elif user == bot:
             # 平局
-            traffic = await edit_traffic(v2_user, 1)
+            traffic = await edit_traffic(v2_user, bot_user.betting)
             result = f'平局，已返还下注流量\n当前账户流量：{traffic}GB'
         else:
             # 没中奖
-            result = f'很遗憾你没有中奖，流量已从你账户扣除1GB\n当前账户流量：{traffic}GB'
-        return result, WAITING_INPUT
+            result = f'很遗憾你没有中奖，流量已从你账户扣除{bot_user.betting}GB\n当前账户流量：{traffic}GB'
+        return result, START_ROUTES
     else:
         return forward, ConversationHandler.END
 
 
-async def gambling(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    result = f'暂不支持{update.message.dice.emoji}玩法。'
-    STATUS = WAITING_INPUT
+# 用户退出游戏
+async def quit_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    telegram_id = update.effective_user.id
+    keyboard = [
+        return_keyboard,
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
+    if not bot_user:
+        await update.message.reply_text('未绑定,请先绑定', reply_markup=reply_markup)
+        return START_ROUTES
+    bot_user.is_game = False
+    bot_user.save()
+    await update.message.reply_text('已退出赌博模式。', reply_markup=reply_markup)
+    return START_ROUTES
 
-    # 总开关
+
+async def select_flow(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    telegram_id = update.effective_user.id
+    query = update.callback_query
+    if query:
+        await query.answer()
+        betting = update.callback_query.data
+    else:
+        betting = update.message.text + 'GB'
+        query = update
+
+
+    if betting == 'xGB':
+        await query.message.reply_text(text=f'请发送你要下注的流量，单位：GB')
+        return 'input_betting'
+    bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
+    bot_user.betting = int(betting.replace('GB', ''))
+    bot_user.save()
+    await query.message.reply_text(text=f'下注成功，你每局游戏将下注{betting}流量')
+    return START_ROUTES
+
+
+# 用户开始游戏
+async def start_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    telegram_id = update.effective_user.id
+    keyboard = [[], []]
+    for i in range(1, 11):
+        if i < 6:
+            keyboard[0].append(InlineKeyboardButton(f'{i}GB', callback_data=f'{i}GB'))
+        else:
+            keyboard[1].append(InlineKeyboardButton(f'{i}GB', callback_data=f'{i}GB'))
+
+    keyboard.append([InlineKeyboardButton(f'自定义下注流量', callback_data=f'xGB')])
+    keyboard.append(return_keyboard)
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query = update.callback_query
+    await query.answer()
+
+    v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
+    if not v2_user:
+        await update.message.reply_text(
+            text=f'未绑定,请先绑定',
+            reply_markup=reply_markup
+        )
+        return START_ROUTES
+
     if config.GAME.switch != True:
         await update.message.reply_text(text='当前赌博模式关闭，请联系管理员！')
-        return WAITING_INPUT
+        return ConversationHandler.END
 
-    v2_user = V2User.select().where(V2User.telegram_id == update.effective_user.id).first()
+    bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
+    bot_user.is_game = True
+    bot_user.save()
+    await query.edit_message_text(
+        text=f'当前赔率:🎰1赔{config.TIGER.rate}   🎲1赔{config.DICE.rate}\n发送"不玩了"退出赌博模式\n请选择下注流量或自定义：',
+        reply_markup=reply_markup
+    )
+    return START_ROUTES
+
+
+async def gambling(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    telegram_id = update.effective_user.id
+    keyboard = [
+        return_keyboard,
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
+    if not v2_user:
+        await update.message.reply_text(
+            text=f'未绑定,请先绑定',
+            reply_markup=reply_markup
+        )
+        return START_ROUTES
+
+    if config.GAME.switch != True:
+        await update.message.reply_text(text='当前赌博模式关闭，请联系管理员！')
+        return ConversationHandler.END
+
+    # 判断该用户有没有开启赌博模式
+    bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
+    if bot_user.is_game != True:
+        keyboard = [
+            [InlineKeyboardButton('开启', callback_data='start_game')],
+            return_keyboard,
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await update.message.reply_text(text='你没有开启赌博模式，是否开启？', reply_markup=reply_markup)
+        return START_ROUTES
+
+    result = f'暂不支持{update.message.dice.emoji}玩法。'
+    STATUS = START_ROUTES
+
+    # 开始玩游戏
+    v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
     # 分流
     if update.message.dice.emoji == '🎰':
-        result, STATUS = await tiger(update, context, v2_user)
+        result, STATUS = await tiger(update, context, v2_user, bot_user)
 
     if update.message.dice.emoji == '🎲':
-        result, STATUS = await dice_(update, context, v2_user)
+        result, STATUS = await dice_(update, context, v2_user, bot_user)
 
     await update.message.reply_text(text=result)
     return STATUS

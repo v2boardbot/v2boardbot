@@ -5,10 +5,5 @@ bot.db
 !requirements.txt
 *.sql
 文档.md
-inlinekeyboard2.py
-config2.py
-config1.py
-mymodel.py
 test.py
-main.py
 config.yaml

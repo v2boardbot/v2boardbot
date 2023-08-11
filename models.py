@@ -109,6 +109,8 @@ class BotUser(Model):
     v2_user = ForeignKeyField(V2User, backref='v2user')
     sign_time = DateTimeField(null=True)
     lucky_time = DateTimeField(null=True)
+    is_game = BooleanField(default=False)
+    betting = BigIntegerField(null=True)
 
     class Meta:
         database = BotDb

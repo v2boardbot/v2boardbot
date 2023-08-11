@@ -2,6 +2,7 @@ from init import init
 from admin import *
 from admin import game_settings, game_tiger, tiger_switch, tiger_rate, edit_tiger_rate
 from admin import bot_settings, set_title, edit_title
+from games import *
 import logging
 import os
 import telegram
@@ -34,7 +35,7 @@ if HTTPS_PROXY.find('未配置') == -1:
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    level=logging.ERROR
 )
 
 
@@ -92,11 +93,6 @@ async def handle_input_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 
-async def quit_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('已退出输入模式')
-    return ConversationHandler.END
-
-
 if __name__ == '__main__':
     # 面板数据库连接
     Db.connect()
@@ -117,6 +113,8 @@ if __name__ == '__main__':
         CommandHandler('wallet', command_wallet),  # 处理查看钱包命令
         CommandHandler('traffic', command_traffic),  # 处理查看流量命令
         CallbackQueryHandler(start_over, pattern="^start_over$"),
+        MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_game),
+        MessageHandler(filters.Dice(), gambling),
     ]
     conv_handler = ConversationHandler(
         entry_points=CommandList,
@@ -126,7 +124,9 @@ if __name__ == '__main__':
                 CallbackQueryHandler(bot_settings, pattern="^settings"),
                 CallbackQueryHandler(setting_reload, pattern="^setting_reload"),
                 CallbackQueryHandler(game_settings, pattern="^game_settings"),
-                CallbackQueryHandler(menu_gambling, pattern="^gambling"),
+                CallbackQueryHandler(start_game, pattern="^start_game"),
+                CallbackQueryHandler(select_flow, pattern="^[1-9]|10GB|xGB$"),
+                # CallbackQueryHandler(menu_gambling, pattern="^gambling"),
                 CallbackQueryHandler(menu_wallet, pattern="^wallet"),
                 CallbackQueryHandler(menu_checkin, pattern="^checkin$"),
                 CallbackQueryHandler(menu_sub, pattern="^sub$"),
@@ -138,10 +138,10 @@ if __name__ == '__main__':
                 # CallbackQueryHandler(three, pattern="^" + str(THREE) + "$"),
                 # CallbackQueryHandler(four, pattern="^" + str(FOUR) + "$"),
             ],
-            WAITING_INPUT: [
-                MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_input),
-                MessageHandler(filters.Dice(), gambling),
-            ],
+            # WAITING_INPUT: [
+            #     MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_input),
+            #     MessageHandler(filters.Dice(), gambling),
+            # ],
             'addtime': [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_input_text)
             ],
@@ -150,13 +150,20 @@ if __name__ == '__main__':
                 MessageHandler(filters.TEXT & ~filters.COMMAND, edit_title)
             ],
             'game_settings': [
+                CallbackQueryHandler(game_switch, pattern="^game_switch"),
+
                 CallbackQueryHandler(game_tiger, pattern="^game_tiger"),
                 CallbackQueryHandler(tiger_switch, pattern="^tiger_switch"),
                 CallbackQueryHandler(tiger_rate, pattern="^tiger_rate"),
-                CallbackQueryHandler(game_switch, pattern="^game_switch"),
+
+
+
             ],
             'tiger_rate': [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, edit_tiger_rate)
+            ],
+            'input_betting': [
+                MessageHandler(filters.TEXT, select_flow),
             ]
         },
         fallbacks=CommandList,
