@@ -105,6 +105,7 @@ async def quit_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return START_ROUTES
 
 
+# 用户下注并开启游戏
 async def select_flow(update: Update, context: ContextTypes.DEFAULT_TYPE):
     telegram_id = update.effective_user.id
     query = update.callback_query
@@ -115,20 +116,36 @@ async def select_flow(update: Update, context: ContextTypes.DEFAULT_TYPE):
         betting = update.message.text + 'GB'
         query = update
 
-
     if betting == 'xGB':
         await query.message.reply_text(text=f'请发送你要下注的流量，单位：GB')
         return 'input_betting'
     bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
     bot_user.betting = int(betting.replace('GB', ''))
+    bot_user.is_game = True
     bot_user.save()
     await query.message.reply_text(text=f'下注成功，你每局游戏将下注{betting}流量')
     return START_ROUTES
 
 
-# 用户开始游戏
+# 用户准备开始游戏
 async def start_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
     telegram_id = update.effective_user.id
+    query = update.callback_query
+    await query.answer()
+
+    keyboard = [
+        return_keyboard,
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
+    if not v2_user:
+        await query.edit_message_text(
+            text=f'未绑定,请先绑定',
+            reply_markup=reply_markup
+        )
+        return START_ROUTES
+
     keyboard = [[], []]
     for i in range(1, 11):
         if i < 6:
@@ -139,24 +156,10 @@ async def start_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard.append([InlineKeyboardButton(f'自定义下注流量', callback_data=f'xGB')])
     keyboard.append(return_keyboard)
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query = update.callback_query
-    await query.answer()
-
-    v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
-    if not v2_user:
-        await update.message.reply_text(
-            text=f'未绑定,请先绑定',
-            reply_markup=reply_markup
-        )
-        return START_ROUTES
 
     if config.GAME.switch != True:
         await update.message.reply_text(text='当前赌博模式关闭，请联系管理员！')
         return ConversationHandler.END
-
-    bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
-    bot_user.is_game = True
-    bot_user.save()
     await query.edit_message_text(
         text=f'当前赔率:🎰1赔{config.TIGER.rate}   🎲1赔{config.DICE.rate}\n发送"不玩了"退出赌博模式\n请选择下注流量或自定义：',
         reply_markup=reply_markup

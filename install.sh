@@ -72,5 +72,9 @@ echo "Project dependencies installed."
 
 echo -e "\033[32;1mPackage manifest generated successfully. \033[0m"
 echo
+if pgrep -f "Bot.py" > /dev/null; then
+    echo "Killing running Bot.py processes..."
+    pkill -f "Bot.py"
+fi
 echo -e "\033[32;1m前台运行：$install_dir/bin/python3.9 Bot.py \033[0m"
 echo -e "\033[32;1m后台运行：nohup $install_dir/bin/python3.9 Bot.py &\033[0m"
