@@ -7,7 +7,11 @@ from Config import config
 async def game_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    game_switch = '🚫赌博模式:关' if config.GAME.switch == True else '🔛赌博模式:开'
     keyboard = [
+        [
+            InlineKeyboardButton(game_switch, callback_data='game_switch'),
+        ],
         [
             InlineKeyboardButton('🎰老虎机', callback_data='game_tiger'),
             InlineKeyboardButton('🎲骰子', callback_data='game_dice'),
@@ -21,6 +25,18 @@ async def game_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return 'game_settings'
 
 
+async def game_switch(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    if config.GAME.switch == True:
+        config.GAME.switch = False
+    else:
+        config.GAME.switch = True
+    config.save()
+    await game_settings(update, context)
+    return 'game_settings'
+
+
 async def game_tiger(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -29,13 +45,13 @@ async def game_tiger(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [
             InlineKeyboardButton(switch, callback_data='tiger_switch'),
-            InlineKeyboardButton('📈赔率', callback_data='tiger_rate'),
+            InlineKeyboardButton(f'📈赔率:{config.TIGER.rate}', callback_data='tiger_rate'),
         ],
         return_keyboard,
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await query.edit_message_text(
-        text=config.TELEGRAM.title, reply_markup=reply_markup
+        text='老虎机配置', reply_markup=reply_markup
     )
     return 'game_settings'
 
@@ -70,9 +86,8 @@ async def tiger_switch(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     if config.TIGER.switch == True:
         config.TIGER.switch = False
-        await query.message.reply_text(text='老虎机关闭成功')
     else:
         config.TIGER.switch = True
-        await query.message.reply_text(text='老虎机开启成功')
     config.save()
+    await game_tiger(update, context)
     return 'game_settings'

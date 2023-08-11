@@ -184,13 +184,16 @@ def _traffic(telegram_id):
         return '未绑定,请先绑定'
     if v2_user.expired_at == 0:
         return '未订阅任何套餐，请先订阅'
-    num = v2_user.transfer_enable / 1024 ** 3
-    text = f'''🚥流量查询
+    traffic = v2_user.transfer_enable / 1024 ** 3  # 总量
+    upload = v2_user.u / 1024 ** 3  # 已用上行
+    download = v2_user.d / 1024 ** 3  # 已用下行
+    residual = traffic - upload - download  # 剩余流量
+    text = f'''🚥流量查询 
 --------
-计划流量：{v2_user.plan_id.transfer_enable} GB
-已用上行：{round(v2_user.u / 1024 ** 3, 2)} GB
-已用下行：{round(v2_user.d / 1024 ** 3, 2)} GB
-剩余流量：{round(num, 2)} GB
+计划流量：{round(traffic, 2)} GB
+已用上行：{round(upload, 2)} GB
+已用下行：{round(download, 2)} GB
+剩余流量：{round(residual, 2)} GB
 '''
     return text
 

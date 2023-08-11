@@ -1,8 +1,7 @@
 from init import init
-init()
-
-from admin.game_settings import game_settings, game_tiger, tiger_switch, tiger_rate, edit_tiger_rate
-from admin.settings import bot_settings, set_title, edit_title
+from admin import *
+from admin import game_settings, game_tiger, tiger_switch, tiger_rate, edit_tiger_rate
+from admin import bot_settings, set_title, edit_title
 import logging
 import os
 import telegram
@@ -17,8 +16,8 @@ from telegram.ext import (
 from MenuHandle import *
 from MyCommandHandler import *
 from Config import config
-from games import slot_machine
-from keyboard import start_keyboard
+from games import gambling
+from keyboard import start_keyboard, start_keyboard_admin
 from v2board import _bind, _checkin, _traffic, _lucky, _addtime
 from models import Db, BotDb, BotUser
 from Utils import START_ROUTES, END_ROUTES
@@ -46,20 +45,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         admin_telegram_id = config.TELEGRAM.admin_telegram_id
         config.save()
     if update.effective_user.id == admin_telegram_id and update.effective_message.chat.type == 'private':
-        start_keyboard_admin = [
-                                   [
-                                       InlineKeyboardButton(text='⚙Bot设置', callback_data='settings'),
-                                       InlineKeyboardButton(text='等待添加', callback_data='resetdata')
-                                   ],
-                                   [
-                                       InlineKeyboardButton(text='🎮游戏设置', callback_data='game_settings'),
-                                       InlineKeyboardButton(text='等待添加', callback_data='resetdata')
-                                   ],
-                                   [
-                                       InlineKeyboardButton(text='⏱添加时长', callback_data='addtime'),
-                                       InlineKeyboardButton(text='🔁重置流量', callback_data='resetdata')
-                                   ],
-                               ] + start_keyboard
         reply_markup = InlineKeyboardMarkup(start_keyboard_admin)
     else:
         reply_markup = InlineKeyboardMarkup(start_keyboard)
@@ -71,7 +56,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def start_over(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
-    reply_markup = InlineKeyboardMarkup(start_keyboard)
+
+    admin_telegram_id = config.TELEGRAM.admin_telegram_id
+    if update.effective_user.id == admin_telegram_id and update.effective_message.chat.type == 'private':
+        reply_markup = InlineKeyboardMarkup(start_keyboard_admin)
+    else:
+        reply_markup = InlineKeyboardMarkup(start_keyboard)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text='my Bot', reply_markup=reply_markup)
     await query.edit_message_text(config.TELEGRAM.title, reply_markup=reply_markup)
     return START_ROUTES
@@ -126,7 +116,7 @@ if __name__ == '__main__':
         CommandHandler('lucky', command_lucky),  # 处理幸运抽奖命令
         CommandHandler('wallet', command_wallet),  # 处理查看钱包命令
         CommandHandler('traffic', command_traffic),  # 处理查看流量命令
-
+        CallbackQueryHandler(start_over, pattern="^start_over$"),
     ]
     conv_handler = ConversationHandler(
         entry_points=CommandList,
@@ -134,8 +124,9 @@ if __name__ == '__main__':
             START_ROUTES: [
                 CallbackQueryHandler(menu_addtime, pattern="^addtime"),
                 CallbackQueryHandler(bot_settings, pattern="^settings"),
+                CallbackQueryHandler(setting_reload, pattern="^setting_reload"),
                 CallbackQueryHandler(game_settings, pattern="^game_settings"),
-                CallbackQueryHandler(menu_slot_machine, pattern="^slot_machine"),
+                CallbackQueryHandler(menu_gambling, pattern="^gambling"),
                 CallbackQueryHandler(menu_wallet, pattern="^wallet"),
                 CallbackQueryHandler(menu_checkin, pattern="^checkin$"),
                 CallbackQueryHandler(menu_sub, pattern="^sub$"),
@@ -143,14 +134,13 @@ if __name__ == '__main__':
                 CallbackQueryHandler(menu_traffic, pattern="^traffic$"),
                 CallbackQueryHandler(menu_lucky, pattern="^lucky"),
                 CallbackQueryHandler(menu_node, pattern="^node"),
-                CallbackQueryHandler(start_over, pattern="^start_over$"),
                 CallbackQueryHandler(end, pattern="^end$"),
                 # CallbackQueryHandler(three, pattern="^" + str(THREE) + "$"),
                 # CallbackQueryHandler(four, pattern="^" + str(FOUR) + "$"),
             ],
             WAITING_INPUT: [
                 MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_input),
-                MessageHandler(filters.Dice(), slot_machine),
+                MessageHandler(filters.Dice(), gambling),
             ],
             'addtime': [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_input_text)
@@ -163,6 +153,7 @@ if __name__ == '__main__':
                 CallbackQueryHandler(game_tiger, pattern="^game_tiger"),
                 CallbackQueryHandler(tiger_switch, pattern="^tiger_switch"),
                 CallbackQueryHandler(tiger_rate, pattern="^tiger_rate"),
+                CallbackQueryHandler(game_switch, pattern="^game_switch"),
             ],
             'tiger_rate': [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, edit_tiger_rate)

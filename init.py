@@ -150,21 +150,49 @@ def check_v2board(config_path):
 
 
 def check_file(config_path):
-    if not os.path.exists(config_path):
-        config = {
-            'TIGER': {},
-            'DICE': {},
-            'TELEGRAM': {
-                'token': None
-            },
-        }
-        config['TIGER']['switch'] = False
-        config['TIGER']['rate'] = 20
-        config['DICE']['switch'] = False
-        config['DICE']['rate'] = 2
-        config['TELEGRAM'][
-            'title'] = '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
+    if os.path.exists(config_path):
+        with open(config_path, 'r', encoding='utf8') as fp:
+            config = yaml.safe_load(fp)
 
+        if not config.get('TELEGRAM'):
+            config['TELEGRAM'] = {
+                'token': None,
+                'TELEGRAM': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
+            }
+        if not config.get('GAME'):
+            config['GAME'] = {
+                'switch': False
+            }
+        if not config.get('TIGER'):
+            config['TIGER'] = {
+                'switch': False,
+                'rate': 20,
+            }
+        if not config.get('DICE'):
+            config['DICE'] = {
+                'switch': False,
+                'rate': 2,
+            }
+        save_config(config)
+    else:
+        config = {
+            'TELEGRAM': {
+                'token': None,
+                'TELEGRAM': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
+            },
+            'GAME': {
+                'switch': False
+            },
+            'TIGER': {
+                'switch': False,
+                'rate': 20,
+            },
+            'DICE': {
+                'switch': False,
+                'rate': 2,
+            },
+
+        }
         save_config(config)
 
 
@@ -178,3 +206,6 @@ def init(config_path='config.yaml'):
     with open(config_path, 'r', encoding='utf8') as fp:
         config = yaml.safe_load(fp)
         return config
+
+
+init()

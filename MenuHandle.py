@@ -10,6 +10,7 @@ from telegram.ext import (
 
 from Config import config
 from keyboard import return_keyboard
+from models import V2User
 from v2board import _bind, _checkin, _traffic, _lucky, _sub, _node, _wallet, _mysub
 from Utils import START_ROUTES, END_ROUTES, WAITING_INPUT
 
@@ -28,14 +29,21 @@ async def menu_addtime(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return 'addtime'
 
 
-# 老虎机
-async def menu_slot_machine(update: Update, context: ContextTypes.DEFAULT_TYPE):
+# 赌博模式
+async def menu_gambling(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     keyboard = [
         return_keyboard,
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
+    v2_user = V2User.select().where(V2User.telegram_id == update.effective_user.id).first()
+    if not v2_user:
+        await query.edit_message_text(
+            text=f'未绑定,请先绑定',
+            reply_markup=reply_markup
+        )
+        return START_ROUTES
     await query.edit_message_text(
         text=f'请发送🎰或🎲表情，可以连续发送\n当前赔率:🎰1赔{config.TIGER.rate} 🎲1赔{config.DICE.rate}\n发送"不玩了"退出赌博模式',
         reply_markup=reply_markup
