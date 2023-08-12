@@ -175,6 +175,28 @@ def check_file(config_path):
                 'switch': False,
                 'rate': 2,
             }
+        if not config.get('BASKETBALL'):
+            config['BASKETBALL'] = {
+                'switch': False,
+                'rate': 3,
+            }
+        if not config.get('FOOTBALL'):
+            config['FOOTBALL'] = {
+                'switch': False,
+                'rate': 3,
+            }
+        if not config.get('BULLSEYE'):
+            config['BULLSEYE'] = {
+                'switch': False,
+                'rate': 1.1,
+            }
+
+        if not config.get('BOWLING'):
+            config['BOWLING'] = {
+                'switch': False,
+                'rate': 1.1,
+            }
+
         save_config(config)
     else:
         config = {
@@ -194,7 +216,22 @@ def check_file(config_path):
                 'switch': False,
                 'rate': 2,
             },
-
+            'BASKETBALL': {
+                'switch': False,
+                'rate': 3,
+            },
+            'FOOTBALL': {
+                'switch': False,
+                'rate': 3,
+            },
+            'BULLSEYE': {
+                'switch': False,
+                'rate': 1.1,
+            },
+            'BOWLING': {
+                'switch': False,
+                'rate': 1.1,
+            }
         }
         save_config(config)
 

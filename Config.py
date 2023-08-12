@@ -36,6 +36,26 @@ class Config:
         switch = None
         to_dict = None
 
+    class BASKETBALL:
+        rate = None
+        switch = None
+        to_dict = None
+
+    class FOOTBALL:
+        rate = None
+        switch = None
+        to_dict = None
+
+    class BULLSEYE:
+        rate = None
+        switch = None
+        to_dict = None
+
+    class BOWLING:
+            rate = None
+            switch = None
+            to_dict = None
+
     class GAME:
         switch = None
         to_dict = None

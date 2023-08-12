@@ -20,7 +20,7 @@ async def is_forward(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user
 async def can_games(v2_user, bot_user):
     traffic = await get_traffic(v2_user)
     if traffic < bot_user.betting:
-        return f'你的流量已不足{bot_user.betting}，无法进行游戏'
+        return f'你的流量已不足{bot_user.betting}GB，无法进行游戏'
     else:
         return True
 
@@ -87,6 +87,116 @@ async def dice_(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot
     else:
         return forward, ConversationHandler.END
 
+
+async def basketball(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot_user):
+    # 开关
+    if config.BASKETBALL.switch != True:
+        return '当前篮球游戏关闭，不可进行游戏', START_ROUTES
+
+    # 判断能否玩游戏
+    can_game = await can_games(v2_user, bot_user)
+    if can_game != True:
+        return can_game, ConversationHandler.END
+
+    # 判断是否转发
+    forward = await is_forward(update, context, v2_user, bot_user)
+    if forward == False:
+        # 扣下注流量
+        traffic = await edit_traffic(v2_user, -bot_user.betting)
+        if update.message.dice.value in [4, 5]:
+            add_rate = (update.message.dice.value - 4) * 0.5
+            rate = (add_rate + config.BASKETBALL.rate) * bot_user.betting
+            # 中奖
+            result = f'恭喜你中奖了，获得{rate}GB流量已经存入你的账户\n当前账户流量：{await edit_traffic(v2_user, rate)}GB'
+        else:
+            # 没中奖
+            result = f'很遗憾你没有中奖，流量已从你账户扣除{bot_user.betting}GB\n当前账户流量：{traffic}GB'
+        return result, START_ROUTES
+    else:
+        return forward, ConversationHandler.END
+
+
+async def football(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot_user):
+    # 开关
+    if config.FOOTBALL.switch != True:
+        return '当前足球游戏关闭，不可进行游戏', START_ROUTES
+
+    # 判断能否玩游戏
+    can_game = await can_games(v2_user, bot_user)
+    if can_game != True:
+        return can_game, ConversationHandler.END
+
+    # 判断是否转发
+    forward = await is_forward(update, context, v2_user, bot_user)
+    if forward == False:
+        # 扣下注流量
+        traffic = await edit_traffic(v2_user, -bot_user.betting)
+        if update.message.dice.value in [4, 5]:
+            add_rate = (update.message.dice.value - 4) * 0.5
+            rate = (add_rate + config.FOOTBALL.rate) * bot_user.betting
+            # 中奖
+            result = f'恭喜你中奖了，获得{rate}GB流量已经存入你的账户\n当前账户流量：{await edit_traffic(v2_user, rate)}GB'
+        else:
+            # 没中奖
+            result = f'很遗憾你没有中奖，流量已从你账户扣除{bot_user.betting}GB\n当前账户流量：{traffic}GB'
+        return result, START_ROUTES
+    else:
+        return forward, ConversationHandler.END
+
+
+async def bullseye(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot_user):
+    # 开关
+    if config.BULLSEYE.switch != True:
+        return '当前飞镖游戏关闭，不可进行游戏', START_ROUTES
+
+    # 判断能否玩游戏
+    can_game = await can_games(v2_user, bot_user)
+    if can_game != True:
+        return can_game, ConversationHandler.END
+
+    # 判断是否转发
+    forward = await is_forward(update, context, v2_user, bot_user)
+    if forward == False:
+        # 扣下注流量
+        traffic = await edit_traffic(v2_user, -bot_user.betting)
+        if update.message.dice.value != 1:
+            add_rate = (update.message.dice.value - 2) * 0.1
+            rate = (add_rate + config.BULLSEYE.rate) * bot_user.betting
+            # 中奖
+            result = f'恭喜你中奖了，获得{round(rate, 2)}GB流量已经存入你的账户\n当前账户流量：{await edit_traffic(v2_user, rate)}GB'
+        else:
+            # 没中奖
+            result = f'很遗憾你没有中奖，流量已从你账户扣除{bot_user.betting}GB\n当前账户流量：{traffic}GB'
+        return result, START_ROUTES
+    else:
+        return forward, ConversationHandler.END
+
+async def bowling(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot_user):
+    # 开关
+    if config.BOWLING.switch != True:
+        return '当前保龄球游戏关闭，不可进行游戏', START_ROUTES
+
+    # 判断能否玩游戏
+    can_game = await can_games(v2_user, bot_user)
+    if can_game != True:
+        return can_game, ConversationHandler.END
+
+    # 判断是否转发
+    forward = await is_forward(update, context, v2_user, bot_user)
+    if forward == False:
+        # 扣下注流量
+        traffic = await edit_traffic(v2_user, -bot_user.betting)
+        if update.message.dice.value != 1:
+            add_rate = (update.message.dice.value - 2) * 0.1
+            rate = (add_rate + config.BOWLING.rate) * bot_user.betting
+            # 中奖
+            result = f'恭喜你中奖了，获得{round(rate, 2)}GB流量已经存入你的账户\n当前账户流量：{await edit_traffic(v2_user, rate)}GB'
+        else:
+            # 没中奖
+            result = f'很遗憾你没有中奖，流量已从你账户扣除{bot_user.betting}GB\n当前账户流量：{traffic}GB'
+        return result, START_ROUTES
+    else:
+        return forward, ConversationHandler.END
 
 # 用户退出游戏
 async def quit_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -167,6 +277,7 @@ async def start_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return START_ROUTES
 
 
+# 用户进行游戏
 async def gambling(update: Update, context: ContextTypes.DEFAULT_TYPE):
     telegram_id = update.effective_user.id
     keyboard = [
@@ -208,6 +319,18 @@ async def gambling(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if update.message.dice.emoji == '🎲':
         result, STATUS = await dice_(update, context, v2_user, bot_user)
+
+    if update.message.dice.emoji == '🏀':
+        result, STATUS = await basketball(update, context, v2_user, bot_user)
+
+    if update.message.dice.emoji == '⚽':
+        result, STATUS = await football(update, context, v2_user, bot_user)
+
+    if update.message.dice.emoji == '🎯':
+        result, STATUS = await bullseye(update, context, v2_user, bot_user)
+
+    if update.message.dice.emoji == '🎳':
+        result, STATUS = await bowling(update, context, v2_user, bot_user)
 
     await update.message.reply_text(text=result)
     return STATUS
