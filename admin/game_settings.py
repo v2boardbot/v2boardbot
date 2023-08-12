@@ -64,7 +64,7 @@ async def game_rate(update: Update, context: ContextTypes.DEFAULT_TYPE):
         game_config = game_dict[game_name]
 
         await query.edit_message_text(
-            text=f'请发送{game_name}赔率0\n当前倍率：{game_config.rate}', reply_markup=reply_markup
+            text=f'请发送{game_name}赔率\n当前倍率：{game_config.rate}', reply_markup=reply_markup
         )
         edit_game_name = game_name
     else:
