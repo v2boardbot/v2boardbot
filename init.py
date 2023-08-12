@@ -157,7 +157,9 @@ def check_file(config_path):
         if not config.get('TELEGRAM'):
             config['TELEGRAM'] = {
                 'token': None,
-                'TELEGRAM': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
+                'checkin': None,
+                'lucky': None,
+                'title': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
             }
         if not config.get('GAME'):
             config['GAME'] = {
@@ -177,8 +179,9 @@ def check_file(config_path):
     else:
         config = {
             'TELEGRAM': {
-                'token': None,
-                'TELEGRAM': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
+                'checkin': None,
+                'lucky': None,
+                'title': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
             },
             'GAME': {
                 'switch': False

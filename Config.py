@@ -15,6 +15,8 @@ class Config:
         https_proxy = None
         token = None
         title = None
+        checkin = None
+        lucky = None
         to_dict = None
 
     class WEBSITE:

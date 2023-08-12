@@ -1,7 +1,5 @@
 from init import init
 from admin import *
-from admin import game_settings, game_tiger, tiger_switch, tiger_rate, edit_tiger_rate
-from admin import bot_settings, set_title, edit_title
 from games import *
 import logging
 import os
@@ -121,7 +119,7 @@ if __name__ == '__main__':
         states={
             START_ROUTES: [
                 CallbackQueryHandler(menu_addtime, pattern="^addtime"),
-                CallbackQueryHandler(bot_settings, pattern="^settings"),
+                CallbackQueryHandler(bot_settings, pattern="^bot_settings"),
                 CallbackQueryHandler(setting_reload, pattern="^setting_reload"),
                 CallbackQueryHandler(game_settings, pattern="^game_settings"),
                 CallbackQueryHandler(start_game, pattern="^start_game"),
@@ -145,25 +143,25 @@ if __name__ == '__main__':
             'addtime': [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_input_text)
             ],
-            'settings': [
-                CallbackQueryHandler(set_title, pattern="^set_title"),
-                MessageHandler(filters.TEXT & ~filters.COMMAND, edit_title)
+            'bot_settings': [
+                CallbackQueryHandler(settings, pattern="^settings"),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, settings)
             ],
             'game_settings': [
                 CallbackQueryHandler(game_switch, pattern="^game_switch"),
+                CallbackQueryHandler(select_game, pattern="^select_game"),
+                CallbackQueryHandler(game_rate, pattern="^game_rate"),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, game_rate)
 
-                CallbackQueryHandler(game_tiger, pattern="^game_tiger"),
-                CallbackQueryHandler(tiger_switch, pattern="^tiger_switch"),
-                CallbackQueryHandler(tiger_rate, pattern="^tiger_rate"),
-
-
-
+                # CallbackQueryHandler(game_tiger, pattern="^game_tiger"),  # 已废弃
+                # CallbackQueryHandler(tiger_switch, pattern="^tiger_switch$"),  # # 已废弃
+                # CallbackQueryHandler(tiger_rate, pattern="^tiger_rate"),  # # 已废弃
             ],
-            'tiger_rate': [
-                MessageHandler(filters.TEXT & ~filters.COMMAND, edit_tiger_rate)
-            ],
+            # 'tiger_rate': [
+            #     MessageHandler(filters.TEXT & ~filters.COMMAND, edit_tiger_rate)
+            # ],
             'input_betting': [
-                MessageHandler(filters.TEXT, select_flow),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, select_flow),
             ]
         },
         fallbacks=CommandList,
@@ -177,19 +175,3 @@ if __name__ == '__main__':
     # 关闭数据库
     Db.close()
     BotDb.close()
-
-    # 命令处理
-    # start_handler = CommandHandler('start', start)
-    # bind_handler = CommandHandler('bind', bind)  # 处理绑定命令
-    # checkin_handler = CommandHandler('checkin', checkin)  # 处理签到命令
-    # traffic_handler = CommandHandler('traffic', traffic)  # 处理查看流量命令
-    # lucky_handler = CommandHandler('lucky', lucky)  # 处理抽奖命令
-
-    # 消息处理
-
-    # 添加处理插件
-    # application.add_handler(start_handler)
-    # application.add_handler(bind_handler)  # 添加绑定处理方法
-    # application.add_handler(checkin_handler)  # 添加签到处理方法
-    # application.add_handler(traffic_handler)  # 添加查看流量处理方法
-    # application.add_handler(lucky_handler)  # 添加抽奖处理方法
