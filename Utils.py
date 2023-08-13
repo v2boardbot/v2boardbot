@@ -35,6 +35,8 @@ def getNodes():
         online += "人"
         line = '节点名称:' + item['name'] + '\n' + '节点状态:' + status + '\n' + '在线人数:' + online + '\n'
         text += line + '----------------------------' + '\n'
+    if text == '':
+        text = '当前无可用节点'
     return text
 
 

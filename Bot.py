@@ -48,7 +48,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         reply_markup = InlineKeyboardMarkup(start_keyboard)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text='my Bot', reply_markup=reply_markup)
-    await update.message.reply_text(config.TELEGRAM.title, reply_markup=reply_markup)
+    await update.message.reply_text(config.TELEGRAM.title, reply_markup=reply_markup, disable_web_page_preview=True)
     return START_ROUTES
 
 
@@ -62,7 +62,7 @@ async def start_over(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         reply_markup = InlineKeyboardMarkup(start_keyboard)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text='my Bot', reply_markup=reply_markup)
-    await query.edit_message_text(config.TELEGRAM.title, reply_markup=reply_markup)
+    await query.edit_message_text(config.TELEGRAM.title, reply_markup=reply_markup, disable_web_page_preview=True)
     return START_ROUTES
 
 
@@ -89,7 +89,6 @@ async def handle_input_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text = '输入有误，请输入整数'
     await update.message.reply_text(text)
     return ConversationHandler.END
-
 
 if __name__ == '__main__':
     # 面板数据库连接

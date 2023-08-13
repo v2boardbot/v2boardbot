@@ -1,10 +1,21 @@
 from peewee import *
 from playhouse.pool import PooledMySQLDatabase, PooledSqliteDatabase
-from Config import config
-DATABASE = config.DATABASE.to_dict()
-Db = PooledMySQLDatabase(**DATABASE)
+from playhouse.shortcuts import ReconnectMixin
 
-BotDb = PooledSqliteDatabase('bot.db', max_connections=8, stale_timeout=300)
+from Config import config
+
+
+class ReconnectPooledMySQLDatabase(ReconnectMixin, PooledMySQLDatabase):
+    pass
+
+class ReconnectPooledSqliteDatabase(ReconnectMixin, PooledSqliteDatabase):
+    pass
+
+DATABASE = config.DATABASE.to_dict()
+
+Db = ReconnectPooledMySQLDatabase(**DATABASE, max_connections=8, stale_timeout=300)
+
+BotDb = ReconnectPooledSqliteDatabase('bot.db', max_connections=8, stale_timeout=300)
 
 
 class BaseModel(Model):
