@@ -17,6 +17,7 @@ class Config:
         title = None
         checkin = None
         lucky = None
+        delete_message = None
         to_dict = None
 
     class WEBSITE:
@@ -108,6 +109,7 @@ class Config:
             yaml.dump(saved_config, fp)
 
         self.config = saved_config
+        self.reload()
 
     def reload(self):
         self.config = self._load_config(self.config_path)

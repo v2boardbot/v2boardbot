@@ -30,7 +30,7 @@ async def settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query:
         await query.answer()
         set_name = update.callback_query.data.replace('settings', '')
-        text = '请发送你的标题'
+        text = f'请发送你的{set_name}'
         if set_name in ['📅签到设置', '✨抽奖设置']:
             text = f'请发送你的{set_name}信息\n格式:最小值|最大值\n单位:MB\n例:-1024|1024;随机扣1024到加1024MB\nPS:发送关闭可关闭本功能'
         keyboard = [
@@ -47,20 +47,15 @@ async def settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return 'bot_settings'
         try:
             input_ = update.message.text
+            if set_name == '🗑️删除时间':
+                input_ = int(input_)
             setattr(config.TELEGRAM, settings_dict[set_name], input_)
             config.save()
             text = f'编辑成功，当前{set_name}为:\n{input_}'
             edit_setting_name = False
         except:
-            text = '输入有误，请重新输入，请输入整数或者小数'
+            text = '输入有误，请重新输入整数或小数'
         await update.message.reply_text(text)
 
 
     return 'bot_settings'
-
-
-async def edit_title(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    config.TELEGRAM.title = update.message.text
-    await update.message.reply_text(text='编辑成功，新标题:\n' + config.TELEGRAM.title)
-    config.save()
-    return ConversationHandler.END

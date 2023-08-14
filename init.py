@@ -159,6 +159,7 @@ def check_file(config_path):
                 'token': None,
                 'checkin': None,
                 'lucky': None,
+                'delete_message': 60,
                 'title': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
             }
         if not config.get('GAME'):
@@ -203,6 +204,7 @@ def check_file(config_path):
             'TELEGRAM': {
                 'checkin': None,
                 'lucky': None,
+                'delete_message': 60,
                 'title': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
             },
             'GAME': {

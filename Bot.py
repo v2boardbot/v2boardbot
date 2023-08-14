@@ -1,16 +1,20 @@
+import asyncio
+import datetime
+import time
+
 from init import init
 from admin import *
 from games import *
 import logging
 import os
 import telegram
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, Dice
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, Dice, Bot
 from telegram.ext import (
     Application,
     CallbackQueryHandler,
     CommandHandler,
     ContextTypes,
-    ConversationHandler, MessageHandler, filters,
+    ConversationHandler, MessageHandler, filters, TypeHandler, BaseHandler,
 )
 from MenuHandle import *
 from MyCommandHandler import *
@@ -20,6 +24,7 @@ from keyboard import start_keyboard, start_keyboard_admin
 from v2board import _bind, _checkin, _traffic, _lucky, _addtime
 from models import Db, BotDb, BotUser
 from Utils import START_ROUTES, END_ROUTES
+from threading import Thread
 
 # 加载不需要热加载的配置项
 TOKEN = config.TELEGRAM.token
@@ -90,6 +95,73 @@ async def handle_input_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text)
     return ConversationHandler.END
 
+
+class Mybot(Bot):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._message_dict = {}
+        thread = Thread(target=self.th_delete_message)
+        thread.start()
+
+    def th_delete_message(self):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(self.async_delete_message())
+        loop.close()
+
+    async def async_delete_message(self):
+        while True:
+            for chat_id, message_list in self._message_dict.items():
+                flag = False
+                for idx, message_info in enumerate(message_list):
+                    # print(time.time(), message_info['time'], time.time() - message_info['time'])
+                    if time.time() - message_info['time'] > config.TELEGRAM.delete_message:
+                        try:
+                            await self.deleteMessage(message_info['chat_id'], message_id=message_info['user_message_id'],
+                                                     pool_timeout=30)
+                        except:
+                            # print(message_info, '删除失败，可能该消息已经被删除')
+                            pass
+                        try:
+                            await self.deleteMessage(message_info['chat_id'], message_id=message_info['bot_message_id'],
+                                                     pool_timeout=30)
+                        except:
+                            # print(message_info, '删除失败，可能该消息已经被删除')
+                            pass
+                        self._message_dict[chat_id].pop(idx)
+                    else:
+                        flag = True
+                        break
+                if flag:
+                    break
+
+            await asyncio.sleep(2)
+
+    async def add_message_dict(self, botmessage):
+        if botmessage.reply_to_message:
+            chat_id = botmessage.chat.id
+            message_info = {
+                'chat_id': botmessage.chat.id,
+                'bot_message_id': botmessage.id,
+                'user_message_id': botmessage.reply_to_message.message_id,
+                'time': time.time()
+            }
+            if self._message_dict.get(chat_id):
+                self._message_dict[chat_id].append(message_info)
+            else:
+                self._message_dict[chat_id] = [message_info]
+
+    async def send_message(self, **kwargs):
+        botmessage = await super().send_message(**kwargs)
+        await self.add_message_dict(botmessage)
+        return botmessage
+
+    async def send_dice(self, **kwargs):
+        botmessage = await super().send_dice(**kwargs)
+        await self.add_message_dict(botmessage)
+        return botmessage
+
+
 if __name__ == '__main__':
     # 面板数据库连接
     Db.connect()
@@ -98,8 +170,9 @@ if __name__ == '__main__':
     else:
         res = BotDb.connect()
         BotDb.create_tables([BotUser])
+    bot = Mybot(token=TOKEN)
+    application = Application.builder().bot(bot).build()
 
-    application = Application.builder().token(TOKEN).build()
     CommandList = [
         CommandHandler("start", start),
         CommandHandler("myid", myid),

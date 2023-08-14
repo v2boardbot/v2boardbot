@@ -1,3 +1,6 @@
+import asyncio
+import datetime
+
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ContextTypes, ConversationHandler
 from Config import config
@@ -41,6 +44,7 @@ async def tiger(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot
         # 扣下注流量
         traffic = await edit_traffic(v2_user, -bot_user.betting)
         rate = config.TIGER.rate * bot_user.betting
+        await asyncio.sleep(0.8)
         if update.message.dice.value in [1, 22, 43, 64]:
             # 中奖
             result = f'恭喜你中奖了，获得{rate}GB流量已经存入你的账户\n当前账户流量：{await edit_traffic(v2_user, rate)}GB'
@@ -73,6 +77,7 @@ async def dice_(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot
         user = update.message.dice.value
         bot_message = await update.message.reply_dice(emoji='🎲')
         bot = bot_message.dice.value
+        await asyncio.sleep(3.5)
         if user > bot:
             # 中奖
             result = f'恭喜你中奖了，获得{rate}GB流量已经存入你的账户\n当前账户流量：{await edit_traffic(v2_user, rate)}GB'
