@@ -157,13 +157,12 @@ if __name__ == '__main__':
         entry_points=CommandList,
         states={
             START_ROUTES: [
-                CallbackQueryHandler(menu_addtime, pattern="^addtime"),
                 CallbackQueryHandler(bot_settings, pattern="^bot_settings"),
                 CallbackQueryHandler(setting_reload, pattern="^setting_reload"),
                 CallbackQueryHandler(game_settings, pattern="^game_settings"),
                 CallbackQueryHandler(start_game, pattern="^start_game"),
                 CallbackQueryHandler(select_flow, pattern="^[1-9]|10GB|xGB$"),
-                # CallbackQueryHandler(menu_gambling, pattern="^gambling"),
+                CallbackQueryHandler(v2board_settings, pattern="^v2board_settings"),
                 CallbackQueryHandler(menu_wallet, pattern="^wallet"),
                 CallbackQueryHandler(menu_checkin, pattern="^checkin$"),
                 CallbackQueryHandler(menu_sub, pattern="^sub$"),
@@ -172,13 +171,7 @@ if __name__ == '__main__':
                 CallbackQueryHandler(menu_lucky, pattern="^lucky"),
                 CallbackQueryHandler(menu_node, pattern="^node"),
                 CallbackQueryHandler(end, pattern="^end$"),
-                # CallbackQueryHandler(three, pattern="^" + str(THREE) + "$"),
-                # CallbackQueryHandler(four, pattern="^" + str(FOUR) + "$"),
             ],
-            # WAITING_INPUT: [
-            #     MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_input),
-            #     MessageHandler(filters.Dice(), gambling),
-            # ],
             'addtime': [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_input_text)
             ],
@@ -191,14 +184,10 @@ if __name__ == '__main__':
                 CallbackQueryHandler(select_game, pattern="^select_game"),
                 CallbackQueryHandler(game_rate, pattern="^game_rate"),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, game_rate)
-
-                # CallbackQueryHandler(game_tiger, pattern="^game_tiger"),  # 已废弃
-                # CallbackQueryHandler(tiger_switch, pattern="^tiger_switch$"),  # # 已废弃
-                # CallbackQueryHandler(tiger_rate, pattern="^tiger_rate"),  # # 已废弃
             ],
-            # 'tiger_rate': [
-            #     MessageHandler(filters.TEXT & ~filters.COMMAND, edit_tiger_rate)
-            # ],
+            'v2board_settings': [
+                CallbackQueryHandler(select_setting, pattern="^v2board_settings"),
+            ],
             'input_betting': [
                 MessageHandler(filters.TEXT & ~filters.COMMAND, select_flow),
             ]

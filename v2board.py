@@ -38,7 +38,6 @@ def get_sky(cityName):
 def _addtime(day: int):
     v2_users = V2User.select().where(V2User.expired_at > 0).execute()
     second = day * 24 * 60 * 60
-    print(second)
     for v2_user in v2_users:
         v2_user.expired_at += second
         v2_user.save()
@@ -180,7 +179,7 @@ def _lucky(telegram_id):
         return f'请{3600 - (datetime.now() - botuser.lucky_time).seconds}秒后再来抽奖哦!'
 
     if config.TELEGRAM.lucky.find('未配置') != -1:
-        return '管理员未配置抽奖信息或未开启签抽奖'
+        return '管理员未配置抽奖信息或未开启抽奖'
     if config.TELEGRAM.lucky == '关闭':
         return '抽奖也关闭，请联系管理员'
     try:

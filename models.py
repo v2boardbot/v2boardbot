@@ -112,6 +112,22 @@ class V2User(BaseModel):
     class Meta:
         table_name = 'v2_user'
 
+# 定义 用户流量 模型
+class V2StatUser(BaseModel):
+    created_at = IntegerField()
+    d = BigIntegerField()
+    record_at = IntegerField()
+    record_type = CharField()
+    server_rate = DecimalField(index=True)
+    u = BigIntegerField()
+    updated_at = IntegerField()
+    user_id = ForeignKeyField(V2User)
+
+    class Meta:
+        table_name = 'v2_stat_user'
+        indexes = (
+            (('server_rate', 'user_id', 'record_at'), True),
+        )
 
 # 定义机器人用户模型
 class BotUser(Model):

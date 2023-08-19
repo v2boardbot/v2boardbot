@@ -18,7 +18,7 @@ start_keyboard = [
         InlineKeyboardButton(text='🎰赌博模式🎲', callback_data='start_game'),
     ],
     [
-        InlineKeyboardButton(text='Ver:20230815.1 main',
+        InlineKeyboardButton(text='Ver:20230819.1 main',
                              url='https://github.com/v2boardbot/v2boardbot')
     ]
 ]
@@ -29,12 +29,8 @@ keyboard_admin = [
     ],
     [
         InlineKeyboardButton(text='🎮游戏设置', callback_data='game_settings'),
-        InlineKeyboardButton(text='等待添加', callback_data='resetdata')
+        InlineKeyboardButton(text='✈机场管理', callback_data='v2board_settings')
     ],
-    [
-        InlineKeyboardButton(text='⏱添加时长', callback_data='addtime'),
-        InlineKeyboardButton(text='🔁重置流量', callback_data='resetdata')
-    ]
 ]
 start_keyboard_admin = keyboard_admin + start_keyboard
 return_keyboard = [InlineKeyboardButton('返回菜单', callback_data='start_over')]
