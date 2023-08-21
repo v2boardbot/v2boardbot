@@ -22,7 +22,7 @@ settings_dict = {
 
 v2board_dict = {
     '⏱添加时长': 'xx',
-    '🔁重置流量': 'xx',
+    '🚮解绑用户': 'xx',
     '🥇昨日排行': 'xx',
     '🏆本月排行': 'xx',
 }
@@ -56,13 +56,13 @@ def statMonth():
     timestamp_last_day = int(last_day.timestamp())
     # - datetime.timedelta(days=1)
     results = (V2StatUser
-               .select(V2StatUser, fn.SUM(V2StatUser.u + V2StatUser.d).alias('total_traffic'))
+               .select(V2StatUser, fn.SUM((V2StatUser.u + V2StatUser.d) * V2StatUser.server_rate).alias('total_traffic'))
                .where(V2StatUser.record_at.between(timestamp_first_day, timestamp_last_day))
                .group_by(V2StatUser.user_id)
                .order_by(SQL('total_traffic DESC'))
                .limit(10)
                )
-    text = f'📊{first_day.date()}至{last_day.date()}流量前10名\n---------------\n'
+    text = f'📊{first_day.date()}至{current_date.date()}流量前10名\n---------------\n'
     for idx, result in enumerate(results):
         text += f'{emoji_list[idx]}  {result.user_id.email} {convert_bytes(int(result.total_traffic))}\n\n'
     return text
@@ -74,7 +74,7 @@ def statDay():
     yesterday_start = datetime.datetime.combine(yesterday, datetime.time.min)
     timestamp = int(yesterday_start.timestamp())
     results = (V2StatUser
-               .select(V2StatUser, fn.SUM(V2StatUser.u + V2StatUser.d).alias('total_traffic'))
+               .select(V2StatUser, fn.SUM((V2StatUser.u + V2StatUser.d) * V2StatUser.server_rate).alias('total_traffic'))
                .where(V2StatUser.record_at == timestamp)
                .group_by(V2StatUser.user_id)
                .order_by(SQL('total_traffic DESC'))

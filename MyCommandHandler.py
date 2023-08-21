@@ -6,7 +6,10 @@ from telegram.ext import (
     ContextTypes,
     ConversationHandler,
 )
+
+from Config import config
 from keyboard import return_keyboard
+from models import V2User
 from v2board import _bind, _checkin, _traffic, _lucky, _unbind, _wallet
 from Utils import START_ROUTES, END_ROUTES
 
@@ -48,6 +51,12 @@ async def command_bind(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # 解绑
 async def command_unbind(update: Update, context: ContextTypes.DEFAULT_TYPE):
     telegram_id = update.effective_user.id
+    if len(context.args) >= 1:
+        # 判断是否管理员
+        if telegram_id == config.TELEGRAM.admin_telegram_id:
+            email = context.args[0]
+            v2_user = V2User.select().where(V2User.email == email).first()
+            telegram_id = v2_user.telegram_id
     text = _unbind(telegram_id)
     keyboard = [
         return_keyboard,

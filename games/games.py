@@ -13,7 +13,7 @@ from models import V2User, BotUser
 # 判断是否转发消息
 async def is_forward(update: Update, context: ContextTypes.DEFAULT_TYPE, v2_user, bot_user):
     if update.message.forward_from or update.message.forward_sender_name:
-        result = f'由于你想投机取巧，因此没收你的下注流量!\n不和没有诚信的人玩，游戏结束!\n当前账户流量：{await edit_traffic(v2_user, bot_user.betting)}GB'
+        result = f'由于你想投机取巧，因此没收你的下注流量!\n当前账户流量：{await edit_traffic(v2_user, -bot_user.betting)}GB'
         return result
     else:
         return False

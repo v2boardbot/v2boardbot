@@ -19,6 +19,8 @@ async def select_setting(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text = statDay()
     elif name == '🏆本月排行':
         text = statMonth()
+    elif name == '🚮解绑用户':
+        text = '请发送"/unbind 用户邮箱"来强制解绑用户,该命令仅限管理员'
     keyboard = [
         return_keyboard,
     ]
