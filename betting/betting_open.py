@@ -14,6 +14,7 @@ async def entertained(context: ContextTypes.DEFAULT_TYPE):
 
 
 async def open_number(context: ContextTypes.DEFAULT_TYPE):
+    context.bot_data['text'] = None
     current_time, up_number, betting_number = get_betting_number()
     # 老虎机开奖
     chat_id = config.TELEGRAM.open_group
@@ -76,7 +77,7 @@ async def open_number(context: ContextTypes.DEFAULT_TYPE):
             elif result.betting_content == '💣':
                 reward = result.betting_money * 15
             await edit_traffic(v2_user, reward)
-        text += f'{result.telegram_name}下注【{result.betting_content}】中奖{reward}GB流量\n'
+            text += f'@{result.telegram_name} 下注【{result.betting_content}】中奖{reward}GB流量\n'
         result.result = log_content
         result.bonus = reward
         result.save()

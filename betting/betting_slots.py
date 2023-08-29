@@ -69,10 +69,18 @@ async def betting_slots(update: Update, context: ContextTypes.DEFAULT_TYPE):
         BotBetting.create(telegram_id=telegram_id, telegram_name=telegram_name, chat_id=chat_id, betting_type='slots',
                           betting_content=betting_content, betting_money=betting_money, betting_number=betting_number,
                           betting_date=datetime.datetime.now())
-
-        text = f'下注期号:{betting_number}\n'
-        text += f'下注内容:{betting_content}\n'
-        text += f'下注流量:{betting_money}GB\n'
+        if context.bot_data.get('text'):
+            text = context.bot_data['text']
+        else:
+            text = update.effective_message.text
+        reply_markup = update.effective_message.reply_markup
+        text += f'\n@{telegram_name} 下注【{betting_content}】{betting_money}GB流量'
+        # text = f'下注期号:{betting_number}\n'
+        #
+        # text += f'下注内容:{betting_content}\n'
+        # text += f'下注流量:{betting_money}GB\n'
         # await query.message.reply_text(text=text)
-        await context.bot.send_message(chat_id=telegram_id, text=text)
+        context.bot_data['text'] = text
+        await query.edit_message_text(text=text, reply_markup=reply_markup)
+        # await context.bot.send_message(chat_id=telegram_id, text=text)
     return START_ROUTES
