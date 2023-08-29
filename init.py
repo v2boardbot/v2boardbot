@@ -3,6 +3,8 @@ import requests
 import yaml
 from peewee import *
 
+from models import BotBetting, BotBettingLog
+
 
 def print_log(log, type_='tips'):
     if type_ == 'tips':
@@ -56,6 +58,12 @@ def init_database(config_path):
     else:
         res = BotDb.connect()
         BotDb.create_tables([BotUser])
+    if not BotDb.table_exists('bot_betting'):
+        BotDb.create_tables([BotBetting])
+
+    if not BotDb.table_exists('bot_betting_log'):
+        BotDb.create_tables([BotBettingLog])
+
     for v2_user in V2User.select():
         if v2_user.telegram_id:
             bot_user = BotUser.select().where(BotUser.telegram_id == v2_user.telegram_id).first()

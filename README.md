@@ -22,6 +22,7 @@
 - [x] 流量赌博
 - [x] 日流量排行
 - [x] 月流量排行
+- [x] 老虎机群组流量游戏
 
 
 
@@ -68,7 +69,7 @@ traffic - 查看流量
 在你需要部署的机器上克隆本项目
 
 ```bash
-git clone https://github.com/v2boardbot/v2boardbot.git
+git clone -b dev https://github.com/v2boardbot/v2boardbot.git
 ```
 
 #### 一键安装
@@ -118,6 +119,10 @@ root      76652  0.0  0.0 112824  1000 pts/2    S+   18:39   0:00 grep --color=a
 
 ## 更新记录
 
+#### 20230829.1 dev
+
+💡增加老虎机下注机器人开奖游戏
+
 #### 20230821.1 main
 
 🟢修复赌博模式转发表情加流量
@@ -129,12 +134,6 @@ root      76652  0.0  0.0 112824  1000 pts/2    S+   18:39   0:00 grep --color=a
 #### 20230820.1 main
 
 🟢修复查询流量没有按顺序排序
-
-#### 20230819.1 main
-
-🟢修复不太影响使用小bug
-
-💡增加管理员查询流量排行
 
 [查看更多](version.md)
 

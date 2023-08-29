@@ -1,10 +1,7 @@
-import asyncio
-import datetime
-import time
-
 from init import init
 from admin import *
 from games import *
+from betting import *
 import logging
 import os
 import telegram
@@ -23,8 +20,7 @@ from games import gambling
 from keyboard import start_keyboard, start_keyboard_admin
 from v2board import _bind, _checkin, _traffic, _lucky, _addtime
 from models import Db, BotDb, BotUser
-from Utils import START_ROUTES, END_ROUTES
-from threading import Thread
+from Utils import START_ROUTES, END_ROUTES, get_next_first
 
 # 加载不需要热加载的配置项
 TOKEN = config.TELEGRAM.token
@@ -100,8 +96,9 @@ async def delete_message(context: ContextTypes.DEFAULT_TYPE):
     try:
         await context.bot.deleteMessage(chat_id=context.job.chat_id, message_id=context.job.user_id, pool_timeout=30)
     except Exception as e:
-        text = f'delete message error report:\nchat_id: {context.job.chat_id}\nmessage_id:{context.job.user_id}\nError: {e}'
-        await context.bot.send_message(chat_id=config.TELEGRAM.admin_telegram_id, text=text)
+        # text = f'delete message error report:\nchat_id: {context.job.chat_id}\nmessage_id:{context.job.user_id}\nError: {e}'
+        # await context.bot.send_message(chat_id=config.TELEGRAM.admin_telegram_id, text=text)
+        pass
 
 
 class Mybot(Bot):
@@ -129,6 +126,7 @@ class Mybot(Bot):
         return botmessage
 
 
+
 if __name__ == '__main__':
     # 面板数据库连接
     Db.connect()
@@ -140,6 +138,9 @@ if __name__ == '__main__':
     bot = Mybot(token=TOKEN)
     application = Application.builder().bot(bot).build()
     job_queue = application.job_queue
+    when = get_next_first()
+    job_queue.run_once(open_number, when=when)
+    # job_queue.run_repeating(open_number, interval=300, first=first)
     CommandList = [
         CommandHandler("start", start),
         CommandHandler("myid", myid),
@@ -149,9 +150,11 @@ if __name__ == '__main__':
         CommandHandler('lucky', command_lucky),  # 处理幸运抽奖命令
         CommandHandler('wallet', command_wallet),  # 处理查看钱包命令
         CommandHandler('traffic', command_traffic),  # 处理查看流量命令
+        CallbackQueryHandler(betting_slots, pattern="^betting_slots"),
         CallbackQueryHandler(start_over, pattern="^start_over$"),
         MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_game),
         MessageHandler(filters.Dice(), gambling),
+        MessageHandler(filters.Text(['设置为开奖群']), set_open_group)
     ]
     conv_handler = ConversationHandler(
         entry_points=CommandList,

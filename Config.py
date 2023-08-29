@@ -18,6 +18,7 @@ class Config:
         checkin = None
         lucky = None
         delete_message = None
+        open_group = None
         to_dict = None
 
     class WEBSITE:
