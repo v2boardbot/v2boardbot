@@ -121,7 +121,7 @@ root      76652  0.0  0.0 112824  1000 pts/2    S+   18:39   0:00 grep --color=a
 
 #### 20230830.1 dev
 
-🟢感谢[cbot_for_v2board]([caoyyds/cbot_for_v2board: Telegram bot connected to v2board (github.com)](https://github.com/caoyyds/cbot_for_v2board))提供流量游戏玩法思路
+🟢感谢[cbot_for_v2board](https://github.com/caoyyds/cbot_for_v2board)提供流量游戏玩法思路
 
 #### 20230829.2 dev
 
@@ -145,7 +145,7 @@ root      76652  0.0  0.0 112824  1000 pts/2    S+   18:39   0:00 grep --color=a
 
 ## 鸣谢
 - 基于Python的Telegram机器人框架[python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
-- 流量下注玩法参考[cbot_for_v2board]([caoyyds/cbot_for_v2board: Telegram bot connected to v2board (github.com)](https://github.com/caoyyds/cbot_for_v2board))
+- 流量下注玩法参考[cbot_for_v2board](https://github.com/caoyyds/cbot_for_v2board)
 
 ## 作者有话说
 
