@@ -69,7 +69,7 @@ traffic - 查看流量
 在你需要部署的机器上克隆本项目
 
 ```bash
-git clone -b dev https://github.com/v2boardbot/v2boardbot.git
+git clone https://github.com/v2boardbot/v2boardbot.git
 ```
 
 #### 一键安装
