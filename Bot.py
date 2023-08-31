@@ -138,9 +138,9 @@ if __name__ == '__main__':
     bot = Mybot(token=TOKEN)
     application = Application.builder().bot(bot).build()
     job_queue = application.job_queue
-    when = get_next_first()
-    job_queue.run_once(open_number, when=when)
-    # job_queue.run_repeating(open_number, interval=300, first=first)
+    first = get_next_first()
+    # job_queue.run_once(open_number, when=when)
+    job_queue.run_repeating(open_number, interval=300, first=first)
     CommandList = [
         CommandHandler("start", start),
         CommandHandler("myid", myid),
