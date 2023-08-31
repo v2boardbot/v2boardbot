@@ -49,13 +49,19 @@ def check_database(config_path):
 
 
 def init_database(config_path):
-    from models import V2User, Db, BotDb, BotUser
+    from models import V2User, Db, BotDb, BotUser, BotBetting, BotBettingLog
     Db.connect()
     if os.path.exists('bot.db'):
         res = BotDb.connect()
     else:
         res = BotDb.connect()
         BotDb.create_tables([BotUser])
+    if not BotDb.table_exists('bot_betting'):
+        BotDb.create_tables([BotBetting])
+
+    if not BotDb.table_exists('bot_betting_log'):
+        BotDb.create_tables([BotBettingLog])
+
     for v2_user in V2User.select():
         if v2_user.telegram_id:
             bot_user = BotUser.select().where(BotUser.telegram_id == v2_user.telegram_id).first()

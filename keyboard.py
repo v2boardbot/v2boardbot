@@ -18,8 +18,12 @@ start_keyboard = [
         InlineKeyboardButton(text='🎰赌博模式🎲', callback_data='start_game'),
     ],
     [
-        InlineKeyboardButton(text='Ver:20230821.1 main',
-                             url='https://github.com/v2boardbot/v2boardbot')
+        InlineKeyboardButton(text='🎰开奖记录🎰', callback_data='betting_slots'),
+        InlineKeyboardButton(text='🎲下注(开发中)🎲', callback_data='dice'),
+    ],
+    [
+        InlineKeyboardButton(text='Ver:20230831.1 dev',
+                             url='https://github.com/v2boardbot/v2boardbot/tree/dev')
     ]
 ]
 keyboard_admin = [

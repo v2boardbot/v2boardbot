@@ -1,11 +1,12 @@
 import requests
-import yaml
-
+import datetime
 from Config import config
+import pytz
 
 START_ROUTES, END_ROUTES = 0, 1
 
 WAITING_INPUT = 2
+
 
 def _admin_auth():  # 返回网站管理员auth_data
     URL = config.WEBSITE.url
@@ -16,6 +17,7 @@ def _admin_auth():  # 返回网站管理员auth_data
     }
     res = requests.post(api, data=data)
     return res.json()['data']['auth_data']
+
 
 def getNodes():
     URL = config.WEBSITE.url
@@ -40,16 +42,10 @@ def getNodes():
     return text
 
 
-# def read_config(item='all', config_path='config.yaml'):
-#     with open(config_path, 'r') as fp:
-#         config = yaml.safe_load(fp)
-#     if item == 'all':
-#         return config
-#     else:
-#         if item.find('.') == -1:
-#             return config.get(item, {})
-#         else:
-#             level1, level2 = item.split('.')
-#             return config.get(level1, {}).get(level2, f'没有配置{item}')
-#
-#
+def get_next_first():
+    now = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
+    for m in range(1, 6):
+        open_minute = now + datetime.timedelta(minutes=m)
+        if open_minute.minute % 5 == 0:
+            open_date = open_minute.replace(second=0, microsecond=0)
+            return open_date

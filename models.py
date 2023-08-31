@@ -8,8 +8,10 @@ from Config import config
 class ReconnectPooledMySQLDatabase(ReconnectMixin, PooledMySQLDatabase):
     pass
 
+
 class ReconnectPooledSqliteDatabase(ReconnectMixin, PooledSqliteDatabase):
     pass
+
 
 DATABASE = config.DATABASE.to_dict()
 
@@ -21,6 +23,7 @@ BotDb = ReconnectPooledSqliteDatabase('bot.db', max_connections=8, stale_timeout
 class BaseModel(Model):
     class Meta:
         database = Db
+
 
 # 定义 Vmess节点 模型
 class V2ServerVmess(BaseModel):
@@ -112,6 +115,7 @@ class V2User(BaseModel):
     class Meta:
         table_name = 'v2_user'
 
+
 # 定义 用户流量 模型
 class V2StatUser(BaseModel):
     created_at = IntegerField()
@@ -129,6 +133,7 @@ class V2StatUser(BaseModel):
             (('server_rate', 'user_id', 'record_at'), True),
         )
 
+
 # 定义机器人用户模型
 class BotUser(Model):
     id = AutoField(primary_key=True)
@@ -141,3 +146,35 @@ class BotUser(Model):
 
     class Meta:
         database = BotDb
+
+
+# 定义用户下注模型
+class BotBetting(Model):
+    id = AutoField(primary_key=True)
+    telegram_id = BigIntegerField()
+    telegram_name = CharField()
+    chat_id = CharField()
+    betting_type = CharField()
+    betting_content = CharField()
+    betting_money = BigIntegerField()
+    betting_number = BigIntegerField()
+    betting_date = DateTimeField()
+    result = CharField(null=True)
+    bonus = BigIntegerField(null=True)  # 存储字节
+
+    class Meta:
+        database = BotDb
+        table_name = 'bot_betting'
+
+
+# 定义开奖记录模型
+class BotBettingLog(Model):
+    id = AutoField(primary_key=True)
+    log_type = CharField()
+    log_content = CharField()
+    log_number = BigIntegerField()
+    log_date = DateTimeField()
+
+    class Meta:
+        database = BotDb
+        table_name = 'bot_betting_log'
