@@ -88,7 +88,7 @@ async def open_number(context: ContextTypes.DEFAULT_TYPE):
         reward = win_reward(log_content, result.betting_content) * result.betting_money
         if reward > 0:
             await edit_traffic(v2_user, reward)
-            text += f'@{result.telegram_name} 下注【{result.betting_content}】中奖{reward}GB流量\n'
+            text += f'{result.telegram_name} 下注【{result.betting_content}】中奖{reward}GB流量\n'
         result.result = log_content
         result.bonus = reward
         result.save()

@@ -152,6 +152,7 @@ if __name__ == '__main__':
         CommandHandler('traffic', command_traffic),  # 处理查看流量命令
         CallbackQueryHandler(betting_slots, pattern="^betting_slots"),
         CallbackQueryHandler(start_over, pattern="^start_over$"),
+        # MessageHandler(filters.TEXT & ~filters.COMMAND, settings),
         MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_game),
         MessageHandler(filters.Dice(), gambling),
         MessageHandler(filters.Text(['设置为开奖群']), set_open_group)

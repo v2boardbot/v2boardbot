@@ -66,14 +66,14 @@ def get_betting_number(hour=None, minute=None, second=None, microsecond=None):
     if second != None:
         current_time = current_time.replace(second=second)
     if microsecond != None:
-        current_time = current_time.replace(second=microsecond)
+        current_time = current_time.replace(microsecond=microsecond)
     minutes_passed = (current_time - start_time).total_seconds() / 60
     minutes_per_draw = 5
     betting_date = start_time.strftime('%Y%m%d')
     if current_time.minute % 5 == 4:
-        betting_number = int(minutes_passed / minutes_per_draw) + 1
+        betting_number = int(minutes_passed / minutes_per_draw) + 2
     else:
-        betting_number = int(minutes_passed / minutes_per_draw)
+        betting_number = int(minutes_passed / minutes_per_draw) + 1
     if betting_number < 100:
         betting_number = str(betting_number).zfill(3)
     next_num = int(f'{betting_date}{betting_number}')
@@ -157,3 +157,11 @@ slot_machine_value = {
     63: ("🍋", "7️⃣", "7️⃣"),
     64: ("7️⃣", "7️⃣", "7️⃣"),
 }
+
+if __name__ == '__main__':
+    print(get_betting_number(hour=23, minute=55, second=0, microsecond=0))
+    print(get_betting_number(hour=23, minute=56, second=0, microsecond=0))
+    print(get_betting_number(hour=23, minute=57, second=0, microsecond=0))
+    print(get_betting_number(hour=23, minute=58, second=0, microsecond=0))
+    print(get_betting_number(hour=23, minute=59, second=0, microsecond=0))
+    print(get_betting_number(hour=0, minute=0, second=0, microsecond=0))

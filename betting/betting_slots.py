@@ -29,13 +29,15 @@ async def betting_open_log(page_number=1, page_size=10):
 
 async def betting_slots(update: Update, context: ContextTypes.DEFAULT_TYPE):
     telegram_id = update.effective_user.id  # 下注用户
-    telegram_name = update.effective_user.username
+    telegram_name = update.effective_user.name
+    if telegram_name.find('@') == -1:
+        telegram_name = f'@{telegram_name}'
     chat_id = update.effective_chat.id
     v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
     query = update.callback_query
     await query.answer()
     if not v2_user:
-        await context.bot.send_message(chat_id=chat_id, text=f'@{telegram_name} 未绑定,请先绑定')
+        await context.bot.send_message(chat_id=chat_id, text=f'{telegram_name} 未绑定,请先绑定')
         return START_ROUTES
     current_time, up_number, betting_number = get_betting_number()
     if query.data == 'betting_slots':
@@ -58,6 +60,9 @@ async def betting_slots(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         betting_content = query.data.replace('betting_slots', '')  # 下注内容
         bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
+        if bot_user.betting == None:
+            await context.bot.send_message(chat_id=chat_id, text=f'{telegram_name} 你未选择下注流量，请先在赌博模式中选择下注流量')
+            return START_ROUTES
         betting_money = bot_user.betting  # 下注流量
         # 判断用户流量
         can_game = await can_games(v2_user, bot_user)
@@ -74,7 +79,7 @@ async def betting_slots(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             text = update.effective_message.text
         reply_markup = update.effective_message.reply_markup
-        text += f'\n@{telegram_name} 下注【{betting_content}】{betting_money}GB流量'
+        text += f'\n{telegram_name} 下注【{betting_content}】{betting_money}GB流量'
         # text = f'下注期号:{betting_number}\n'
         #
         # text += f'下注内容:{betting_content}\n'

@@ -171,13 +171,6 @@ def _lucky(telegram_id):
     if botuser.__data__.get('v2_user') == 0:
         return '未绑定,请先绑定'
 
-    if botuser.v2_user.expired_at in [None, 0]:
-        return '不限时套餐或未订阅不支持签到'
-
-    # 检查抽奖间隔时间
-    if botuser.lucky_time and (datetime.now() - botuser.lucky_time).seconds < 3600:
-        return f'请{3600 - (datetime.now() - botuser.lucky_time).seconds}秒后再来抽奖哦!'
-
     if config.TELEGRAM.lucky.find('未配置') != -1:
         return '管理员未配置抽奖信息或未开启抽奖'
     if config.TELEGRAM.lucky == '关闭':
@@ -187,6 +180,12 @@ def _lucky(telegram_id):
         statr, end = int(statr), int(end)
     except:
         return '管理员抽奖信息配置错误或未开启抽奖'
+    if botuser.v2_user.transfer_enable < (abs(statr) * 1024 ** 2):
+        return f'抽奖失败，你的流量不足{abs(statr) / 1024}GB'
+    # 检查抽奖间隔时间
+    if botuser.lucky_time and (datetime.now() - botuser.lucky_time).seconds < 3600:
+        return f'请{3600 - (datetime.now() - botuser.lucky_time).seconds}秒后再来抽奖哦!'
+
     num = random.randint(statr, end)
     flow = num * 1024 * 1024
     botuser.v2_user.transfer_enable += flow
