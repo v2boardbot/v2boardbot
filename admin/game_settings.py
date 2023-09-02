@@ -11,7 +11,7 @@ edit_game_name = False
 async def game_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
-    game_switch = '🚫赌博模式:关' if config.GAME.switch == True else '🔛赌博模式:开'
+    game_switch = '🔛赌博模式:开' if config.GAME.switch == True else '🚫赌博模式:关'
     buttons_per_row = 4
     keyboard = [
         [InlineKeyboardButton(j, callback_data=f'select_game{j}') for j in
@@ -90,7 +90,7 @@ async def select_game(update: Update, context: ContextTypes.DEFAULT_TYPE, game_n
     if not game_name:
         game_name = update.callback_query.data.replace('select_game', '')  # 点击的按钮
     game_config = game_dict[game_name]
-    switch = '🚫关闭' if game_config.switch == True else '🔛开启'
+    switch = '🔛开启' if game_config.switch == True else '🚫关闭'
     keyboard = [
         [
             InlineKeyboardButton(switch, callback_data=f'game_switch{game_name}'),

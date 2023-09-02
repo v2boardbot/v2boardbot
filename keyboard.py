@@ -22,7 +22,7 @@ start_keyboard = [
         InlineKeyboardButton(text='🎲下注(开发中)🎲', callback_data='dice'),
     ],
     [
-        InlineKeyboardButton(text='Ver:20230901.1 main',
+        InlineKeyboardButton(text='Ver:20230902.1 main',
                              url='https://github.com/v2boardbot/v2boardbot')
     ]
 ]

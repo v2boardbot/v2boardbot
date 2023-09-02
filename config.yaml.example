@@ -1,0 +1,27 @@
+BASKETBALL:
+  rate: 3
+  switch: true
+BOWLING:
+  rate: 1.1
+  switch: true
+BULLSEYE:
+  rate: 1.1
+  switch: false
+DICE:
+  rate: 1.96
+  switch: true
+FOOTBALL:
+  rate: 3
+  switch: true
+GAME:
+  switch: true
+TELEGRAM:
+  checkin: 1024|2048
+  delete_message: 60
+  lucky: -10240|10240
+  title: "\u5C0A\u656C\u7684\u7528\u6237\uFF0C\u6B22\u8FCE\u4F7F\u7528v2boardbot\n\
+      \u9879\u76EE\u5730\u5740:https://github.com/v2boardbot/v2boardbot\n\"\u6625\u98CE\
+      \u4E0D\u5199\u5931\u610F\uFF0C\u68A6\u9192\u4ECD\u5BFB\u65E7\u5FC6\u3002\""
+TIGER:
+  rate: 15.5
+  switch: false

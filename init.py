@@ -73,40 +73,27 @@ def init_database(config_path):
 
 
 def check_telegram_connect(config_path):
-    if os.path.exists(config_path):
-        with open(config_path, 'r', encoding='utf8') as fp:
-            config = yaml.safe_load(fp)
-    else:
-        config = {
-            'TELEGRAM': {}
-        }
-
-    if config.get('TELEGRAM'):
-        # 电报连接测试
-        if config.get('TELEGRAM').get('http_proxy'):
-            os.environ['HTTP_PROXY'] = config.get('TELEGRAM').get('http_proxy')
-            os.environ['HTTPS_PROXY'] = config.get('TELEGRAM').get('https_proxy')
-        if not config.get('TELEGRAM').get('token'):
+    with open(config_path, 'r', encoding='utf8') as fp:
+        config = yaml.safe_load(fp)
+    if config.get('TELEGRAM').get('http_proxy'):
+        os.environ['HTTP_PROXY'] = config.get('TELEGRAM').get('http_proxy')
+        os.environ['HTTPS_PROXY'] = config.get('TELEGRAM').get('https_proxy')
+    if not config.get('TELEGRAM').get('token'):
+        config['TELEGRAM']['token'] = input('请输入机器人Token:')
+    try:
+        res = requests.get(f'https://api.telegram.org/bot{config["TELEGRAM"]["token"]}/getMe')
+        if res.json()['ok'] == False:
+            print_log('Telegram token setting error', 'error')
             config['TELEGRAM']['token'] = input('请输入机器人Token:')
-        try:
-            res = requests.get(f'https://api.telegram.org/bot{config["TELEGRAM"]["token"]}/getMe')
-            if res.json()['ok'] == False:
-                print_log('Telegram token setting error', 'error')
-                config['TELEGRAM']['token'] = input('请输入机器人Token:')
-                save_config(config, config_path)
-                check_telegram_connect(config_path)
-            else:
-                save_config(config, config_path)
-                print_log(f'Welcome {res.json()["result"]["first_name"]} uses v2boardbot')
-        except Exception as e:
-            print_log(f'Telegram API connection failed:{e}', 'error')
-            config['TELEGRAM']['http_proxy'] = input('请输入代理地址:')
-            config['TELEGRAM']['https_proxy'] = config['TELEGRAM']['http_proxy']
             save_config(config, config_path)
             check_telegram_connect(config_path)
-    else:
-        config['TELEGRAM'] = {}
-        config['TELEGRAM']['token'] = input('请输入机器人Token:')
+        else:
+            save_config(config, config_path)
+            print_log(f'Welcome {res.json()["result"]["first_name"]} uses v2boardbot')
+    except Exception as e:
+        print_log(f'Telegram API connection failed:{e}', 'error')
+        config['TELEGRAM']['http_proxy'] = input('请输入代理地址:')
+        config['TELEGRAM']['https_proxy'] = config['TELEGRAM']['http_proxy']
         save_config(config, config_path)
         check_telegram_connect(config_path)
 
@@ -156,104 +143,21 @@ def check_v2board(config_path):
 
 
 def check_file(config_path):
-    if os.path.exists(config_path):
-        with open(config_path, 'r', encoding='utf8') as fp:
+    if not os.path.exists(config_path):
+        with open('config.yaml.example', encoding='utf8') as fp:
             config = yaml.safe_load(fp)
-
-        if not config.get('TELEGRAM'):
-            config['TELEGRAM'] = {
-                'token': None,
-                'checkin': '关闭',
-                'lucky': '关闭',
-                'delete_message': 60,
-                'title': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
-            }
-        if not config.get('GAME'):
-            config['GAME'] = {
-                'switch': False
-            }
-        if not config.get('TIGER'):
-            config['TIGER'] = {
-                'switch': False,
-                'rate': 20,
-            }
-        if not config.get('DICE'):
-            config['DICE'] = {
-                'switch': False,
-                'rate': 2,
-            }
-        if not config.get('BASKETBALL'):
-            config['BASKETBALL'] = {
-                'switch': False,
-                'rate': 3,
-            }
-        if not config.get('FOOTBALL'):
-            config['FOOTBALL'] = {
-                'switch': False,
-                'rate': 3,
-            }
-        if not config.get('BULLSEYE'):
-            config['BULLSEYE'] = {
-                'switch': False,
-                'rate': 1.1,
-            }
-
-        if not config.get('BOWLING'):
-            config['BOWLING'] = {
-                'switch': False,
-                'rate': 1.1,
-            }
-
-        save_config(config)
-    else:
-        config = {
-            'TELEGRAM': {
-                'checkin': '关闭',
-                'lucky': '关闭',
-                'delete_message': 60,
-                'title': '尊敬的用户，欢迎使用v2boardbot\n项目地址:https://github.com/v2boardbot/v2boardbot\n"春风不写失意，梦醒仍寻旧忆。"'
-            },
-            'GAME': {
-                'switch': False
-            },
-            'TIGER': {
-                'switch': False,
-                'rate': 20,
-            },
-            'DICE': {
-                'switch': False,
-                'rate': 2,
-            },
-            'BASKETBALL': {
-                'switch': False,
-                'rate': 3,
-            },
-            'FOOTBALL': {
-                'switch': False,
-                'rate': 3,
-            },
-            'BULLSEYE': {
-                'switch': False,
-                'rate': 1.1,
-            },
-            'BOWLING': {
-                'switch': False,
-                'rate': 1.1,
-            }
-        }
         save_config(config)
 
 
 def init(config_path='config.yaml'):
     check_file(config_path)
     check_database(config_path)
-    init_database(config_path)
     check_telegram_connect(config_path)
+    init_database(config_path)
     check_v2board(config_path)
 
     with open(config_path, 'r', encoding='utf8') as fp:
         config = yaml.safe_load(fp)
         return config
-
 
 init()
