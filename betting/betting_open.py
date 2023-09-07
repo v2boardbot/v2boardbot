@@ -48,6 +48,9 @@ def win_reward(log_content, betting_content):
 async def open_number(context: ContextTypes.DEFAULT_TYPE):
     context.bot_data['text'] = None
     current_time, up_number, betting_number = get_betting_number()
+    # 判断老虎机开启没有
+    if config.TIGER.switch != True:
+        return
     # 老虎机开奖
     chat_id = config.TELEGRAM.open_group
     if type(chat_id) != int:

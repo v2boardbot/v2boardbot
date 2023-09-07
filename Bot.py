@@ -50,6 +50,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup = InlineKeyboardMarkup(start_keyboard)
     # await context.bot.send_message(chat_id=update.effective_chat.id, text='my Bot', reply_markup=reply_markup)
     await update.message.reply_text(config.TELEGRAM.title, reply_markup=reply_markup, disable_web_page_preview=True)
+    # await update.message.reply_photo(photo=open('1.jpeg', 'rb'), caption=config.TELEGRAM.title, reply_markup=reply_markup)
     return START_ROUTES
 
 
@@ -101,6 +102,28 @@ async def delete_message(context: ContextTypes.DEFAULT_TYPE):
         pass
 
 
+async def set_commands(context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.set_my_commands(commands=[
+        ("start", "展开管理面板"),
+        ("bind", "绑定账号(仅限私聊)"),
+        ("unbind", "解除绑定"),
+        ("checkin", "每日签到"),
+        ("lucky", "幸运抽奖"),
+        ("wallet", "查看钱包"),
+        ("traffic", "查看流量"),
+    ])
+
+
+async def keyword_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    content = update.message.text
+    if type(config.TELEGRAM.keyword_reply) != dict:
+        return
+    for key in config.TELEGRAM.keyword_reply:
+        if content.find(key) != -1:
+            text = config.TELEGRAM.keyword_reply[key]
+            await update.message.reply_text(text=text)
+            break
+
 class Mybot(Bot):
     async def add_message_dict(self, botmessage, dice=False):
         when = config.TELEGRAM.delete_message
@@ -126,7 +149,6 @@ class Mybot(Bot):
         return botmessage
 
 
-
 if __name__ == '__main__':
     # 面板数据库连接
     Db.connect()
@@ -139,7 +161,7 @@ if __name__ == '__main__':
     application = Application.builder().bot(bot).build()
     job_queue = application.job_queue
     first = get_next_first()
-    # job_queue.run_once(open_number, when=when)
+    job_queue.run_once(set_commands, 1)
     job_queue.run_repeating(open_number, interval=300, first=first)
     CommandList = [
         CommandHandler("start", start),
@@ -154,7 +176,9 @@ if __name__ == '__main__':
         CallbackQueryHandler(start_over, pattern="^start_over$"),
         MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_game),
         MessageHandler(filters.Dice(), gambling),
-        MessageHandler(filters.Text(['设置为开奖群']), set_open_group)
+        MessageHandler(filters.Text(['设置为开奖群']), set_open_group),
+        MessageHandler(filters.TEXT & ~filters.COMMAND, keyword_reply),
+
     ]
     conv_handler = ConversationHandler(
         entry_points=CommandList,

@@ -18,6 +18,8 @@ settings_dict = {
     '🗑️删除时间': 'delete_message',
     '📅签到设置': 'checkin',
     '✨抽奖设置': 'lucky',
+    '💬关键词回复': 'keyword_reply',
+    '等待添加': 'xx',
 }
 
 v2board_dict = {

@@ -19,6 +19,7 @@ class Config:
         lucky = None
         delete_message = None
         open_group = None
+        keyword_reply = None
         to_dict = None
 
     class WEBSITE:

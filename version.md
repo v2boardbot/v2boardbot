@@ -1,5 +1,11 @@
 ### 历史更新记录
 
+#### 20230831.1 dev
+
+🟢修复若干bug
+
+💡更新老虎机下注中奖规则
+
 #### 20230830.1 dev
 
 🟢感谢[cbot_for_v2board](https://github.com/caoyyds/cbot_for_v2board)提供流量游戏玩法思路
