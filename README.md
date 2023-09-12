@@ -5,24 +5,7 @@
 </p>
 
 
-##### 声明: 本程序仅为个人学习使用，切勿用于商业用途
-
-
-
-### 功能
-
-- [x] 我的钱包
-- [x] 流量查询
-- [x] 幸运抽奖
-- [x] 订阅链接
-- [x] 我的订阅
-- [x] 每日签到
-- [x] 节点状态
-- [x] 添加时长
-- [x] 流量赌博
-- [x] 日流量排行
-- [x] 月流量排行
-- [x] 老虎机群组流量游戏
+## 声明: 本程序仅为个人学习使用，切勿用于商业用途
 
 
 
@@ -53,8 +36,6 @@
 如果是Turn on就是禁用隐私设置了，不需要更改
 
 老虎机等玩法依赖 Group Privacy ，如果 Group Privacy 为Turn off 将无法使用
-
-在群内发送 设置为开奖群 可开启老虎机 可单独建一个专门开奖群
 
 #### 克隆仓库
 
@@ -91,6 +72,18 @@ root      76652  0.0  0.0 112824  1000 pts/2    S+   18:39   0:00 grep --color=a
 
 `76614`就是机器人运行的进程ID，可以使用`kill -9 76614`命令杀死机器人进程，`76614`换成你自己的进程ID
 
+#### 防白痴说明
+
+在群内发送 设置为开奖群 可开启老虎机 可单独建一个专门开奖群
+
+
+
+## 代码修改
+
+本项目遵循`Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)`开源协议，在你有修改代码的能力的前提下，可遵循本协议继续开发；所有衍生版本不得修改版权信息(包括但不限于机器人菜单底部的项目链接按钮)，自`20230912.1 main`起生效。
+
+
+
 ## 运行截图
 
 ### 管理端
@@ -108,6 +101,12 @@ root      76652  0.0  0.0 112824  1000 pts/2    S+   18:39   0:00 grep --color=a
 - [ ] 重置流量
 
 ## 更新记录
+
+#### 20230912.1 main
+
+🟢修复bug，优化代码
+
+💡新成员加入未绑定机器人操作
 
 #### 20230907.1 main
 
@@ -129,31 +128,19 @@ root      76652  0.0  0.0 112824  1000 pts/2    S+   18:39   0:00 grep --color=a
 
 💡新增"设置为开奖群"命令管理员验证
 
-#### 20230901.1 main
-
-🟢修复期号在0点时错乱
-
-🟢修复没设置用户名导致不能下注
-
-🟢修复没选择下注流量无提示
-
-🟢修复抽奖没流量了还能扣除
-
 [查看更多](version.md)
 
-## 计划开发
+## 共同维护
 
-可以提交issues给我们提供建议功能，提交issues请把问题和建议讲清楚
+欢迎各位大佬提交pr，感谢为本开源项目做贡献；也感谢各位用户，让我有了继续开发得动力
 
-如果对该项目感兴趣，可以参与开发
-
-
+可以提交issues给本项目提供建议，提交issues请把问题和建议讲清楚，感谢各位点击[stars](https://github.com/v2boardbot/v2boardbot/stargazers)
 
 ## 鸣谢
 - 基于Python的Telegram机器人框架[python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
-- 流量下注玩法参考[cbot_for_v2board](https://github.com/caoyyds/cbot_for_v2board)
+- 流量下注玩法参考[cbot_for_v2board](https://github.com/caoyyds/cbot_for_v2board)(已删除仓库)
 
-## 作者有话说
+## 支持开发
 
 **捐赠地址：**`TEqCzhQ48X8iJGYtordwbsd1HXBVYiX9Nr`
 

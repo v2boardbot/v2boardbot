@@ -3,6 +3,8 @@ import requests
 import yaml
 from peewee import *
 
+from models import BotNewMembers
+
 
 def print_log(log, type_='tips'):
     if type_ == 'tips':
@@ -61,6 +63,9 @@ def init_database(config_path):
 
     if not BotDb.table_exists('bot_betting_log'):
         BotDb.create_tables([BotBettingLog])
+
+    if not BotDb.table_exists('bot_new_members'):
+        BotDb.create_tables([BotNewMembers])
 
     for v2_user in V2User.select():
         if v2_user.telegram_id:
@@ -143,10 +148,15 @@ def check_v2board(config_path):
 
 
 def check_file(config_path):
-    if not os.path.exists(config_path):
+    if os.path.exists(config_path):
+        with open('config.yaml', encoding='utf8') as fp:
+            config = yaml.safe_load(fp)
+    else:
         with open('config.yaml.example', encoding='utf8') as fp:
             config = yaml.safe_load(fp)
-        save_config(config)
+    if config['TELEGRAM'].get('new_members') == None:
+        config['TELEGRAM']['new_members'] = 'verify'
+    save_config(config)
 
 
 def init(config_path='config.yaml'):

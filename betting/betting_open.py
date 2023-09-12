@@ -1,6 +1,6 @@
 from telegram.ext import ContextTypes
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-
+from telegram.constants import ParseMode
 from models import BotUser, V2User, BotBetting, BotBettingLog
 from Utils import get_next_first, START_ROUTES
 from betting.utils import *
@@ -123,7 +123,8 @@ async def open_number(context: ContextTypes.DEFAULT_TYPE):
     bot_message = await context.bot.send_message(
         chat_id=chat_id,
         text=text,
-        reply_markup=reply_markup
+        reply_markup=reply_markup,
+        parse_mode=ParseMode.HTML
     )
     # 删除上一条消息
     if context.bot_data.get('chat_id1'):

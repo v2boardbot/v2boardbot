@@ -4,6 +4,7 @@ from betting.utils import *
 from Config import config
 from Utils import START_ROUTES
 from models import BotUser, V2User, BotBetting, BotBettingLog
+from telegram.constants import ParseMode
 
 
 async def betting_open_log(page_number=1, page_size=10):
@@ -29,15 +30,13 @@ async def betting_open_log(page_number=1, page_size=10):
 
 async def betting_slots(update: Update, context: ContextTypes.DEFAULT_TYPE):
     telegram_id = update.effective_user.id  # 下注用户
-    telegram_name = update.effective_user.name
-    if telegram_name.find('@') == -1:
-        telegram_name = f'@{telegram_name}'
+    telegram_name = update.effective_user.mention_html()
     chat_id = update.effective_chat.id
     v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
     query = update.callback_query
     await query.answer()
     if not v2_user:
-        await context.bot.send_message(chat_id=chat_id, text=f'{telegram_name} 未绑定,请先绑定')
+        await context.bot.send_message(chat_id=chat_id, text=f'{telegram_name} 未绑定,请先绑定', parse_mode=ParseMode.HTML)
         return START_ROUTES
     current_time, up_number, betting_number = get_betting_number()
     if query.data == 'betting_slots':
@@ -61,7 +60,8 @@ async def betting_slots(update: Update, context: ContextTypes.DEFAULT_TYPE):
         betting_content = query.data.replace('betting_slots', '')  # 下注内容
         bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
         if bot_user.betting == None:
-            await context.bot.send_message(chat_id=chat_id, text=f'{telegram_name} 你未选择下注流量，请先在赌博模式中选择下注流量')
+            await context.bot.send_message(chat_id=chat_id, text=f'{telegram_name} 你未选择下注流量，请先在赌博模式中选择下注流量',
+                                           parse_mode=ParseMode.HTML)
             return START_ROUTES
         betting_money = bot_user.betting  # 下注流量
         # 判断用户流量
@@ -86,6 +86,6 @@ async def betting_slots(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # text += f'下注流量:{betting_money}GB\n'
         # await query.message.reply_text(text=text)
         context.bot_data['text'] = text
-        await query.edit_message_text(text=text, reply_markup=reply_markup)
+        await query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode=ParseMode.HTML)
         # await context.bot.send_message(chat_id=telegram_id, text=text)
     return START_ROUTES

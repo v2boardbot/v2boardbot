@@ -1,3 +1,5 @@
+import datetime
+
 from peewee import *
 from playhouse.pool import PooledMySQLDatabase, PooledSqliteDatabase
 from playhouse.shortcuts import ReconnectMixin
@@ -178,3 +180,17 @@ class BotBettingLog(Model):
     class Meta:
         database = BotDb
         table_name = 'bot_betting_log'
+
+# 定义 新用户进群 记录模型
+class BotNewMembers(Model):
+    id = AutoField(primary_key=True)
+    telegram_id = BigIntegerField()
+    chat_id = BigIntegerField()
+    verify_type = CharField()
+    verify_value = CharField(null=True)
+    verify_done = BooleanField(default=False)
+    create_date = DateTimeField(default=datetime.datetime.now())
+
+    class Meta:
+        database = BotDb
+        table_name = 'bot_new_members'

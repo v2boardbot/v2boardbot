@@ -19,7 +19,7 @@ settings_dict = {
     '📅签到设置': 'checkin',
     '✨抽奖设置': 'lucky',
     '💬关键词回复': 'keyword_reply',
-    '等待添加': 'xx',
+    '🆕新成员入群': 'new_members',
 }
 
 v2board_dict = {

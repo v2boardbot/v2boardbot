@@ -29,6 +29,9 @@ async def settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global edit_setting_name
     query = update.callback_query
     if query:
+        keyboard = [
+            return_keyboard,
+        ]
         await query.answer()
         set_name = update.callback_query.data.replace('settings', '')
         text = f'请发送你的{set_name}'
@@ -36,9 +39,27 @@ async def settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text = f'请发送你的{set_name}信息\n格式:最小值|最大值\n单位:MB\n例:-1024|1024;随机扣1024到加1024MB\nPS:发送关闭可关闭本功能'
         if set_name == '💬关键词回复':
             text = f'请发送关键词和回答内容，空分割\n示例:官网 v2boardbot\n解释:发送内容包含官网 回复 "v2boardbot"'
-        keyboard = [
-            return_keyboard,
-        ]
+        if set_name.find('🆕新成员入群') != -1:
+            if set_name == '🆕新成员入群':
+                text = '新成员加入并且没有绑定账号我该咋个操作？'
+                keyboard.insert(0, [
+                    InlineKeyboardButton(text='🛑禁言', callback_data='settings🆕新成员入群prohibition'),
+                    InlineKeyboardButton(text='👽踢出', callback_data='settings🆕新成员入群out'),
+                    InlineKeyboardButton(text='🛡️验证', callback_data='settings🆕新成员入群verify'),
+                    InlineKeyboardButton(text='🙈无操作', callback_data='settings🆕新成员入群none')
+                ])
+            else:
+                new_member_dict = {
+                    'prohibition': '禁言',
+                    'out': '踢出',
+                    'verify': '验证',
+                    'none': '无操作',
+                }
+                new_members = set_name.replace('🆕新成员入群', '')
+                text = f'新成员加入并且没有绑定账号我会：{new_member_dict[new_members]}'
+                set_name = False
+                config.TELEGRAM.new_members = new_members
+                config.save()
         reply_markup = InlineKeyboardMarkup(keyboard)
         await query.edit_message_text(
             text=text, reply_markup=reply_markup, disable_web_page_preview=True

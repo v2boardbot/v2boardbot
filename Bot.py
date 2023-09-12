@@ -4,23 +4,21 @@ from games import *
 from betting import *
 import logging
 import os
-import telegram
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, Dice, Bot
+from telegram import ChatMember, ChatMemberUpdated, Bot, ChatPermissions
 from telegram.ext import (
-    Application,
-    CallbackQueryHandler,
-    CommandHandler,
-    ContextTypes,
-    ConversationHandler, MessageHandler, filters, TypeHandler, BaseHandler,
+    ChatMemberHandler,
+    MessageHandler,
+    filters
 )
 from MenuHandle import *
 from MyCommandHandler import *
 from Config import config
 from games import gambling
 from keyboard import start_keyboard, start_keyboard_admin
-from v2board import _bind, _checkin, _traffic, _lucky, _addtime
+from v2board import _bind, _checkin, _traffic, _lucky, _addtime, is_bind
 from models import Db, BotDb, BotUser
 from Utils import START_ROUTES, END_ROUTES, get_next_first
+from typing import Optional, Tuple
 
 # 加载不需要热加载的配置项
 TOKEN = config.TELEGRAM.token
@@ -124,6 +122,116 @@ async def keyword_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(text=text)
             break
 
+
+def extract_status_change(chat_member_update: ChatMemberUpdated) -> Optional[Tuple[bool, bool]]:
+    """Takes a ChatMemberUpdated instance and extracts whether the 'old_chat_member' was a member
+    of the chat and whether the 'new_chat_member' is a member of the chat. Returns None, if
+    the status didn't change.
+    """
+    status_change = chat_member_update.difference().get("status")
+    old_is_member, new_is_member = chat_member_update.difference().get("is_member", (None, None))
+
+    if status_change is None:
+        return None
+
+    old_status, new_status = status_change
+    was_member = old_status in [
+        ChatMember.MEMBER,
+        ChatMember.OWNER,
+        ChatMember.ADMINISTRATOR,
+    ] or (old_status == ChatMember.RESTRICTED and old_is_member is True)
+    is_member = new_status in [
+        ChatMember.MEMBER,
+        ChatMember.OWNER,
+        ChatMember.ADMINISTRATOR,
+    ] or (new_status == ChatMember.RESTRICTED and new_is_member is True)
+
+    return was_member, is_member
+
+
+async def greet_chat_members(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Greets new users in chats and announces when someone leaves"""
+
+    result = extract_status_change(update.chat_member)
+    if result is None:
+        return
+
+    was_member, is_member = result
+    user_id = update.chat_member.from_user.id
+    chat_id = update.chat_member.chat.id
+    cause_name = update.chat_member.from_user.mention_html()
+    member_name = update.chat_member.new_chat_member.user.mention_html()
+
+    if not was_member and is_member:
+        context.user_data['user_id'] = user_id
+        context.user_data['chat_id'] = chat_id
+        if not is_bind(user_id):
+            if config.TELEGRAM.new_members == 'prohibition':
+                context.user_data['verify_type'] = 'prohibition'
+                permissions = ChatPermissions(can_send_messages=False, can_send_media_messages=False,
+                                              can_send_other_messages=False)
+                await context.bot.restrict_chat_member(chat_id=chat_id, user_id=user_id, permissions=permissions)
+                keyboard = [[
+                    InlineKeyboardButton("🔗前往绑定", url=f'{context.bot.link}?bind=bind'),
+                ]]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                await update.effective_chat.send_message(
+                    f"{member_name} 绑定账号后解除禁言！",
+                    parse_mode=ParseMode.HTML,
+                    reply_markup=reply_markup
+                )
+            elif config.TELEGRAM.new_members == 'out':
+                context.user_data['verify_type'] = 'out'
+                await context.bot.ban_chat_member(chat_id=chat_id, user_id=user_id, until_date=60)
+            elif config.TELEGRAM.new_members == 'verify':
+                permissions = ChatPermissions(can_send_messages=False, can_send_media_messages=False,
+                                              can_send_other_messages=False)
+                await context.bot.restrict_chat_member(chat_id=chat_id, user_id=user_id, permissions=permissions)
+                verify_dict = {
+                    '苹果': '🍎',
+                    '香蕉': '🍌',
+                    '葡萄': '🍇',
+                    '草莓': '🍓',
+                    '橙子': '🍊',
+                    '樱桃': '🍒',
+                    '椰子': '🥥',
+                    '菠萝': '🍍',
+                    '桃子': '🍑',
+                    '芒果': '🥭',
+                }
+                import random
+                verify_value = random.choice(list(verify_dict.keys()))
+                buttons_per_row = 4
+                keyboard = [
+                    [InlineKeyboardButton(j, callback_data=f'verify{j}') for j in
+                     list(verify_dict.keys())[i:i + buttons_per_row]]
+                    for i in range(0, len(verify_dict), buttons_per_row)
+                ]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                await update.effective_chat.send_message(
+                    f"{member_name} 欢迎你加入本群！\n请点击下方的 {verify_value} 解除禁言",
+                    parse_mode=ParseMode.HTML,
+                    reply_markup=reply_markup
+                )
+                context.user_data['verify_value'] = verify_value
+
+
+async def verify(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if context.user_data == {}:
+        return
+    query = update.callback_query
+    await query.answer()
+    user_id = update.effective_user.id
+    chat_id = update.effective_chat.id
+    verify_value = query.data.replace('verify', '')
+    if context.user_data['user_id'] == user_id and context.user_data['verify_value'] == verify_value:
+        permissions = ChatPermissions(can_send_messages=True, can_send_media_messages=True,
+                                      can_send_other_messages=True)
+        await context.bot.restrict_chat_member(chat_id=chat_id, user_id=user_id, permissions=permissions)
+        message_id = update.effective_message.id
+        await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+
+
 class Mybot(Bot):
     async def add_message_dict(self, botmessage, dice=False):
         when = config.TELEGRAM.delete_message
@@ -174,6 +282,8 @@ if __name__ == '__main__':
         CommandHandler('traffic', command_traffic),  # 处理查看流量命令
         CallbackQueryHandler(betting_slots, pattern="^betting_slots"),
         CallbackQueryHandler(start_over, pattern="^start_over$"),
+        CallbackQueryHandler(verify, pattern="^verify"),
+        ChatMemberHandler(greet_chat_members, ChatMemberHandler.CHAT_MEMBER),
         MessageHandler(filters.Text(['不玩了', '退出', 'quit']), quit_game),
         MessageHandler(filters.Dice(), gambling),
         MessageHandler(filters.Text(['设置为开奖群']), set_open_group),

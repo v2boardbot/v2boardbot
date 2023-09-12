@@ -1,4 +1,4 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ChatPermissions
 from telegram.ext import (
     Application,
     CallbackQueryHandler,
@@ -28,6 +28,7 @@ async def command_checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # 绑定
 async def command_bind(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # http://172.16.1.14/api/v1/client/subscribe?token=b9bc3bee61de39f04047dbf8dca12e97
+    print(context.user_data)
     keyboard = [
         return_keyboard,
     ]
@@ -40,10 +41,20 @@ async def command_bind(update: Update, context: ContextTypes.DEFAULT_TYPE):
         try:
             token = context.args[0].split('token=')[-1]
         except:
-            text = '参数错误'
+            text = '参数错误，请发送"/bind 订阅链接"'
             await update.message.reply_text(text=text, reply_markup=reply_markup)
             return START_ROUTES
     text = _bind(token, update.effective_user.id)
+    if text == '绑定成功':
+        chat_id = context.user_data['chat_id']
+        user_id = context.user_data['user_id']
+        verify_type = context.user_data['verify_type']
+        if verify_type == 'prohibition':
+            permissions = ChatPermissions(can_send_messages=True, can_send_media_messages=True,
+                                          can_send_other_messages=True)
+            await context.bot.restrict_chat_member(chat_id=chat_id, user_id=user_id, permissions=permissions)
+        elif verify_type == 'out':
+            await context.bot.unban_chat_member(chat_id=chat_id, user_id=user_id, only_if_banned=True)
     await update.message.reply_text(text=text, reply_markup=reply_markup)
     return START_ROUTES
 

@@ -81,7 +81,9 @@ def _bind(token, telegram_id):
 
 def _unbind(telegram_id):
     bot_user = BotUser.select().where(BotUser.telegram_id == telegram_id).first()
-    if bot_user.__data__.get('v2_user') != 0:
+    if not bot_user:
+        return '该Telegram未绑定任何账号'
+    elif bot_user.__data__.get('v2_user') != 0:
         bot_user.v2_user.telegram_id = None
         bot_user.v2_user.save()
         bot_user.v2_user = 0
@@ -222,6 +224,12 @@ def _node(telegram_id):
         return '未绑定,请先绑定'
     return getNodes()
 
+def is_bind(telegram_id):
+    v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
+    if v2_user:
+        return True
+    else:
+        return False
 
 # b9bc3bee61de39f04047dbf8dca12e97
 if __name__ == '__main__':

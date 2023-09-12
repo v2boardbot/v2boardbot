@@ -20,6 +20,7 @@ class Config:
         delete_message = None
         open_group = None
         keyword_reply = None
+        new_members = None
         to_dict = None
 
     class WEBSITE:
