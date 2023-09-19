@@ -136,7 +136,9 @@ def check_v2board(config_path):
                 protocol = url.split('//')[0] + '//'
                 host = url.split('//')[1].split('/')[0]
                 suffix = url.split('//')[1].split('/')[1].replace('#', '').replace('/', '')
-                config['WEBSITE']['url'] = protocol + host
+                config['WEBSITE']['url'] = config_url = protocol + host
+                suburl = input(f'请输入机场面板订阅地址,用于向用户展示订阅链接:（默认:为机场面板地址） [{config_url}]:')  or f'{config_url}'
+                config['WEBSITE']['suburl'] = suburl
                 config['WEBSITE']['suffix'] = suffix
                 break
             except:

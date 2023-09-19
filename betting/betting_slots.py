@@ -34,9 +34,8 @@ async def betting_slots(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     v2_user = V2User.select().where(V2User.telegram_id == telegram_id).first()
     query = update.callback_query
-    await query.answer()
     if not v2_user:
-        await context.bot.send_message(chat_id=chat_id, text=f'{telegram_name} 未绑定,请先绑定', parse_mode=ParseMode.HTML)
+        await query.answer(text=f'{telegram_name} 未绑定,请先绑定', show_alert=True,cache_time=5)
         return START_ROUTES
     current_time, up_number, betting_number = get_betting_number()
     if query.data == 'betting_slots':
