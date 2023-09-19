@@ -28,6 +28,7 @@ class Config:
         password = None
         suffix = None
         url = None
+        suburl = None
         to_dict = None
 
     class TIGER:
