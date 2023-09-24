@@ -3,8 +3,6 @@ import requests
 import yaml
 from peewee import *
 
-from models import BotNewMembers
-
 
 def print_log(log, type_='tips'):
     if type_ == 'tips':
@@ -51,7 +49,7 @@ def check_database(config_path):
 
 
 def init_database(config_path):
-    from models import V2User, Db, BotDb, BotUser, BotBetting, BotBettingLog
+    from models import V2User, Db, BotDb, BotUser, BotBetting, BotBettingLog, BotNewMembers
     Db.connect()
     if os.path.exists('bot.db'):
         res = BotDb.connect()
