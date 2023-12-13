@@ -42,7 +42,7 @@ async def get_traffic(v2_user):
 # 编辑流量
 async def edit_traffic(v2_user, size, unit='GB'):
     size = await to_bytes(size, unit)
-    v2_user.transfer_enable += size
+    v2_user.d += size
     v2_user.save()
     return await get_traffic(v2_user)
 

@@ -1,0 +1,565 @@
+/root/v2boardbot/Bot.py:293: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  conv_handler = ConversationHandler(
+2023-12-12 23:23:06,791 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_application.py", line 1173, in process_update
+    await coroutine
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_conversationhandler.py", line 825, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_basehandler.py", line 141, in handle_update
+    return await self.callback(update, context)
+  File "/root/v2boardbot/betting/betting_slots.py", line 57, in betting_slots
+    await query.edit_message_text(text=text, reply_markup=reply_markup)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_callbackquery.py", line 241, in edit_message_text
+    return await self.message.edit_text(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_message.py", line 2534, in edit_text
+    return await self.get_bot().edit_message_text(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 388, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 3388, in edit_message_text
+    return await self._send_message(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 566, in _send_message
+    result = await self._post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 476, in _post
+    return await self._do_post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 504, in _do_post
+    return await request.post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 325, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2023-12-13 04:38:27,409 - telegram.ext.Updater - ERROR - Error while getting Updates: httpx.RemoteProtocolError: Server disconnected without sending a response.
+2023-12-13 04:38:27,410 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 60, in map_httpcore_exceptions
+    yield
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 262, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 245, in handle_async_request
+    response = await connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 96, in handle_async_request
+    return await self._connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 121, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 99, in handle_async_request
+    ) = await self._receive_response_headers(**kwargs)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 164, in _receive_response_headers
+    event = await self._receive_event(timeout=timeout)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 214, in _receive_event
+    raise RemoteProtocolError(msg)
+httpcore.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 216, in do_request
+    res = await self._client.request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1530, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1617, in send
+    response = await self._send_handling_auth(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1645, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1682, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1719, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/contextlib.py", line 137, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 77, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 604, in _network_loop_retry
+    if not await action_cb():
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 331, in polling_action_cb
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 320, in polling_action_cb
+    updates = await self.bot.get_updates(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 388, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 3668, in get_updates
+    await self._post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 476, in _post
+    return await self._do_post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 504, in _do_post
+    return await request.post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 288, in _request_wrapper
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 278, in _request_wrapper
+    code, payload = await self.do_request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 240, in do_request
+    raise NetworkError(f"httpx.{err.__class__.__name__}: {err}") from err
+telegram.error.NetworkError: httpx.RemoteProtocolError: Server disconnected without sending a response.
+2023-12-13 05:01:44,790 - telegram.ext.Updater - ERROR - Error while getting Updates: httpx.RemoteProtocolError: Server disconnected without sending a response.
+2023-12-13 05:01:44,791 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 60, in map_httpcore_exceptions
+    yield
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 262, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 245, in handle_async_request
+    response = await connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 96, in handle_async_request
+    return await self._connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 121, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 99, in handle_async_request
+    ) = await self._receive_response_headers(**kwargs)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 164, in _receive_response_headers
+    event = await self._receive_event(timeout=timeout)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 214, in _receive_event
+    raise RemoteProtocolError(msg)
+httpcore.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 216, in do_request
+    res = await self._client.request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1530, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1617, in send
+    response = await self._send_handling_auth(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1645, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1682, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1719, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/contextlib.py", line 137, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 77, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 604, in _network_loop_retry
+    if not await action_cb():
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 331, in polling_action_cb
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 320, in polling_action_cb
+    updates = await self.bot.get_updates(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 388, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 3668, in get_updates
+    await self._post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 476, in _post
+    return await self._do_post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 504, in _do_post
+    return await request.post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 288, in _request_wrapper
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 278, in _request_wrapper
+    code, payload = await self.do_request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 240, in do_request
+    raise NetworkError(f"httpx.{err.__class__.__name__}: {err}") from err
+telegram.error.NetworkError: httpx.RemoteProtocolError: Server disconnected without sending a response.
+/root/v2boardbot/Bot.py:293: PTBUserWarning: If 'per_message=False', 'CallbackQueryHandler' will not be tracked for every message. Read this FAQ entry to learn more about the per_* settings: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Frequently-Asked-Questions#what-do-the-per_-settings-in-conversationhandler-do.
+  conv_handler = ConversationHandler(
+2023-12-13 11:00:05,019 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/anyio/_core/_sockets.py", line 189, in connect_tcp
+    addr_obj = ip_address(remote_host)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/ipaddress.py", line 53, in ip_address
+    raise ValueError('%r does not appear to be an IPv4 or IPv6 address' %
+ValueError: 'api.telegram.org' does not appear to be an IPv4 or IPv6 address
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_backends/anyio.py", line 114, in connect_tcp
+    stream: anyio.abc.ByteStream = await anyio.connect_tcp(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/anyio/_core/_sockets.py", line 192, in connect_tcp
+    gai_res = await getaddrinfo(
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_exceptions.py", line 10, in map_exceptions
+    yield
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_backends/anyio.py", line 121, in connect_tcp
+    stream._raw_socket.setsockopt(*option)  # type: ignore[attr-defined] # pragma: no cover
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/anyio/_core/_tasks.py", line 119, in __exit__
+    raise TimeoutError
+TimeoutError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 60, in map_httpcore_exceptions
+    yield
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 262, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 245, in handle_async_request
+    response = await connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 92, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 69, in handle_async_request
+    stream = await self._connect(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 117, in _connect
+    stream = await self._network_backend.connect_tcp(**kwargs)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_backends/auto.py", line 31, in connect_tcp
+    return await self._backend.connect_tcp(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_backends/anyio.py", line 121, in connect_tcp
+    stream._raw_socket.setsockopt(*option)  # type: ignore[attr-defined] # pragma: no cover
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/contextlib.py", line 137, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 216, in do_request
+    res = await self._client.request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1530, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1617, in send
+    response = await self._send_handling_auth(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1645, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1682, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1719, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/contextlib.py", line 137, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 77, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_jobqueue.py", line 800, in _run
+    await self.callback(context)
+  File "/root/v2boardbot/betting/betting_open.py", line 60, in open_number
+    message = await context.bot.send_dice(chat_id=chat_id, emoji='🎰', pool_timeout=30)
+  File "/root/v2boardbot/Bot.py", line 255, in send_dice
+    botmessage = await super().send_dice(**kwargs)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 388, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 6852, in send_dice
+    return await self._send_message(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 566, in _send_message
+    result = await self._post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 476, in _post
+    return await self._do_post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 504, in _do_post
+    return await request.post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 288, in _request_wrapper
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 278, in _request_wrapper
+    code, payload = await self.do_request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 233, in do_request
+    raise TimedOut from err
+telegram.error.TimedOut: Timed out
+2023-12-13 11:21:44,116 - telegram.ext.Updater - ERROR - Error while getting Updates: httpx.RemoteProtocolError: Server disconnected without sending a response.
+2023-12-13 11:21:44,117 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 60, in map_httpcore_exceptions
+    yield
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 262, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 245, in handle_async_request
+    response = await connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 96, in handle_async_request
+    return await self._connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 121, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 99, in handle_async_request
+    ) = await self._receive_response_headers(**kwargs)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 164, in _receive_response_headers
+    event = await self._receive_event(timeout=timeout)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 214, in _receive_event
+    raise RemoteProtocolError(msg)
+httpcore.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 216, in do_request
+    res = await self._client.request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1530, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1617, in send
+    response = await self._send_handling_auth(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1645, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1682, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1719, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/contextlib.py", line 137, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 77, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 604, in _network_loop_retry
+    if not await action_cb():
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 331, in polling_action_cb
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 320, in polling_action_cb
+    updates = await self.bot.get_updates(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 388, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 3668, in get_updates
+    await self._post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 476, in _post
+    return await self._do_post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 504, in _do_post
+    return await request.post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 288, in _request_wrapper
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 278, in _request_wrapper
+    code, payload = await self.do_request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 240, in do_request
+    raise NetworkError(f"httpx.{err.__class__.__name__}: {err}") from err
+telegram.error.NetworkError: httpx.RemoteProtocolError: Server disconnected without sending a response.
+2023-12-13 11:40:15,433 - telegram.ext.Updater - ERROR - Error while getting Updates: httpx.RemoteProtocolError: Server disconnected without sending a response.
+2023-12-13 11:40:15,434 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 60, in map_httpcore_exceptions
+    yield
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 262, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 245, in handle_async_request
+    response = await connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 96, in handle_async_request
+    return await self._connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 121, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 99, in handle_async_request
+    ) = await self._receive_response_headers(**kwargs)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 164, in _receive_response_headers
+    event = await self._receive_event(timeout=timeout)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 214, in _receive_event
+    raise RemoteProtocolError(msg)
+httpcore.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 216, in do_request
+    res = await self._client.request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1530, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1617, in send
+    response = await self._send_handling_auth(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1645, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1682, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1719, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/contextlib.py", line 137, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 77, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 604, in _network_loop_retry
+    if not await action_cb():
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 331, in polling_action_cb
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 320, in polling_action_cb
+    updates = await self.bot.get_updates(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 388, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 3668, in get_updates
+    await self._post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 476, in _post
+    return await self._do_post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 504, in _do_post
+    return await request.post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 288, in _request_wrapper
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 278, in _request_wrapper
+    code, payload = await self.do_request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 240, in do_request
+    raise NetworkError(f"httpx.{err.__class__.__name__}: {err}") from err
+telegram.error.NetworkError: httpx.RemoteProtocolError: Server disconnected without sending a response.
+2023-12-13 11:44:07,570 - telegram.ext.Updater - ERROR - Error while getting Updates: httpx.RemoteProtocolError: Server disconnected without sending a response.
+2023-12-13 11:44:07,571 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 60, in map_httpcore_exceptions
+    yield
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 262, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 245, in handle_async_request
+    response = await connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 96, in handle_async_request
+    return await self._connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 121, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 99, in handle_async_request
+    ) = await self._receive_response_headers(**kwargs)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 164, in _receive_response_headers
+    event = await self._receive_event(timeout=timeout)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/http11.py", line 214, in _receive_event
+    raise RemoteProtocolError(msg)
+httpcore.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 216, in do_request
+    res = await self._client.request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1530, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1617, in send
+    response = await self._send_handling_auth(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1645, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1682, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1719, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/contextlib.py", line 137, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 77, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected without sending a response.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 604, in _network_loop_retry
+    if not await action_cb():
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 331, in polling_action_cb
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_updater.py", line 320, in polling_action_cb
+    updates = await self.bot.get_updates(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 388, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 3668, in get_updates
+    await self._post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 476, in _post
+    return await self._do_post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 504, in _do_post
+    return await request.post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 288, in _request_wrapper
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 278, in _request_wrapper
+    code, payload = await self.do_request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 240, in do_request
+    raise NetworkError(f"httpx.{err.__class__.__name__}: {err}") from err
+telegram.error.NetworkError: httpx.RemoteProtocolError: Server disconnected without sending a response.
+2023-12-13 12:36:14,362 - telegram.ext.Application - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 278, in _request_wrapper
+    code, payload = await self.do_request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_httpxrequest.py", line 216, in do_request
+    res = await self._client.request(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1530, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1617, in send
+    response = await self._send_handling_auth(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1645, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1682, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_client.py", line 1719, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpx/_transports/default.py", line 353, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 262, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection_pool.py", line 245, in handle_async_request
+    response = await connection.handle_async_request(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 92, in handle_async_request
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 69, in handle_async_request
+    stream = await self._connect(request)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_async/connection.py", line 149, in _connect
+    stream = await stream.start_tls(**kwargs)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_backends/anyio.py", line 78, in start_tls
+    raise exc
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/httpcore/_backends/anyio.py", line 69, in start_tls
+    ssl_stream = await anyio.streams.tls.TLSStream.wrap(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/anyio/streams/tls.py", line 123, in wrap
+    await wrapper._call_sslobject_method(ssl_object.do_handshake)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/anyio/streams/tls.py", line 131, in _call_sslobject_method
+    result = func(*args)
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/ssl.py", line 944, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLZeroReturnError: TLS/SSL connection has been closed (EOF) (_ssl.c:1129)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_application.py", line 1173, in process_update
+    await coroutine
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_conversationhandler.py", line 825, in handle_update
+    new_state: object = await handler.handle_update(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/ext/_basehandler.py", line 141, in handle_update
+    return await self.callback(update, context)
+  File "/root/v2boardbot/Bot.py", line 57, in start_over
+    await query.answer()
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_callbackquery.py", line 180, in answer
+    return await self.get_bot().answer_callback_query(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 388, in decorator
+    result = await func(self, *args, **kwargs)  # skipcq: PYL-E1102
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 3313, in answer_callback_query
+    return await self._post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 476, in _post
+    return await self._do_post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/_bot.py", line 504, in _do_post
+    return await request.post(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 168, in post
+    result = await self._request_wrapper(
+  File "/root/v2boardbot/python-3.9.7/lib/python3.9/site-packages/telegram/request/_baserequest.py", line 290, in _request_wrapper
+    raise NetworkError(f"Unknown error in HTTP implementation: {exc!r}") from exc
+telegram.error.NetworkError: Unknown error in HTTP implementation: SSLZeroReturnError(6, 'TLS/SSL connection has been closed (EOF) (_ssl.c:1129)')

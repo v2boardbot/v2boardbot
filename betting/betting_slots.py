@@ -66,10 +66,10 @@ async def betting_slots(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # 判断用户流量
         can_game = await can_games(v2_user, bot_user)
         if can_game != True:
-            await query.message.reply_text(text=can_game)
+            await query.answer(text=can_game, show_alert=True, cache_time=5)
             return START_ROUTES
 
-        await edit_traffic(v2_user, -betting_money)
+        await edit_traffic(v2_user, betting_money)
         BotBetting.create(telegram_id=telegram_id, telegram_name=telegram_name, chat_id=chat_id, betting_type='slots',
                           betting_content=betting_content, betting_money=betting_money, betting_number=betting_number,
                           betting_date=datetime.datetime.now())

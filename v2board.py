@@ -122,12 +122,15 @@ def _checkin(telegram_id):
 
     num = random.randint(statr, end)
     flow = num * 1024 * 1024
-    botuser.v2_user.transfer_enable += flow
+    botuser.v2_user.d += flow
     botuser.sign_time = datetime.now()
     botuser.v2_user.save()
     botuser.save()
-
-    return f'签到成功,获得{round(num / 1024, 2)}GB流量'
+    # 根据下行流量正负给出不同的中奖信息
+    if flow > 0:
+        return f'很遗憾，已增加你{round(num / 1024, 2)}GB已用流量'
+    else:
+        return f'恭喜你，已成功减少{round(num / 1024, 2)}GB已用流量'
 
 
 def _sub(telegram_id):
@@ -183,20 +186,25 @@ def _lucky(telegram_id):
         statr, end = int(statr), int(end)
     except:
         return '管理员抽奖信息配置错误或未开启抽奖'
-    if botuser.v2_user.transfer_enable < (abs(statr) * 1024 ** 2):
+    if (botuser.v2_user.transfer_enable - botuser.v2_user.d) < (abs(statr) * 1024 ** 2):
         return f'抽奖失败，你的流量不足{abs(statr) / 1024}GB'
     # 检查抽奖间隔时间
     if botuser.lucky_time and (datetime.now() - botuser.lucky_time).seconds < 3600:
         return f'请{3600 - (datetime.now() - botuser.lucky_time).seconds}秒后再来抽奖哦!'
 
     num = random.randint(statr, end)
+    # 生成一个在[start, end]范围内的随机整数
     flow = num * 1024 * 1024
-    botuser.v2_user.transfer_enable += flow
+    # 将随机数转换为字节数，并添加到用户的下行流量属性中
+    botuser.v2_user.d += flow
     botuser.lucky_time = datetime.now()
-
     botuser.v2_user.save()
     botuser.save()
-    return f'抽奖成功,{round(num / 1024, 2)}GB流量'
+    # 根据下行流量正负给出不同的中奖信息
+    if flow > 0:
+        return f'中奖失败，受到惩罚，已增加你{round(num / 1024, 2)}GB已用流量'
+    else:
+        return f'中奖了，已成功减少{round(num / 1024, 2)}GB已用流量'
 
 
 def _traffic(telegram_id):
