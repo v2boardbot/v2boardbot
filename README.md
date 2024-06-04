@@ -19,7 +19,7 @@
 
 测试机器人：[@v2boarddevbot](https://t.me/v2boarddevbot)
 
-个人电报：[@k23223](https://t.me/k23223)
+个人电报：[@zhuli_8](https://t.me/zhuli_8)
 
 
 
